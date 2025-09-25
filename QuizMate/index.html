@@ -6,14 +6,55 @@
     <title>AI Law Services</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             line-height: 1.6;
         }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+        }
         .hero-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5l-.234-.234-.234.234L20 20.5z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
-            background-size: 20px 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .banner-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 25%, #7c3aed 50%, #c026d3 75%, #db2777 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+            to { box-shadow: 0 0 30px rgba(99, 102, 241, 0.8), 0 0 40px rgba(139, 92, 246, 0.4); }
+        }
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+        .feature-icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            transition: all 0.3s ease;
+        }
+        .feature-icon:hover {
+            transform: rotate(360deg) scale(1.1);
         }
         html { scroll-behavior: smooth; }
         .card {
@@ -78,12 +119,35 @@
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen">
 
+    <!-- Announcement Banner -->
+    <div class="banner-gradient text-white py-3 px-4 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white to-transparent transform -skew-x-12 animate-pulse"></div>
+        </div>
+        <div class="relative z-10">
+            <p class="text-sm md:text-base font-medium">
+                🎉 <strong>New:</strong> AI-Powered Legal Assistant now available! Get instant legal guidance 24/7
+                <span class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs bg-white bg-opacity-20 backdrop-blur-sm">
+                    <span class="w-2 h-2 bg-green-400 rounded-full mr-1 animate-pulse"></span>
+                    Live
+                </span>
+            </p>
+        </div>
+    </div>
+
     <!-- Main Application Content -->
     <div id="app-content">
         <!-- Header -->
-        <header id="header" class="fixed top-0 left-0 w-full z-50 bg-white/95 shadow-lg backdrop-blur-lg">
+        <header id="header" class="fixed top-0 left-0 w-full z-50 bg-white/95 shadow-xl backdrop-blur-lg border-b border-gray-200/50">
             <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <div class="text-2xl font-bold text-indigo-600 cursor-pointer" id="home-logo">NYAY4U</div>
+                <div class="flex items-center space-x-3 cursor-pointer" id="home-logo">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent hero-title">NYAY4U</span>
+                </div>
                 
                 <div class="md:hidden">
                     <button id="menu-toggle-btn" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
@@ -94,16 +158,16 @@
                 <ul id="nav-menu" class="hidden md:flex md:items-center md:space-x-4 text-gray-600 font-medium absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0">
                     <!-- User Dropdown -->
                     <li class="relative">
-                        <button id="user-menu-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors w-full text-left md:w-auto md:text-center flex items-center space-x-2">
+                        <button id="user-menu-btn" class="px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-300 w-full text-left md:w-auto md:text-center flex items-center space-x-2 shadow-sm">
                             <span>User</span>
                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200">
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200/50 backdrop-blur-sm">
                            <!-- Logged Out State -->
                            <div id="user-logged-out-view">
                                <div class="p-2">
-                                   <button id="userLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Login</button>
-                                   <button id="userRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Register</button>
+                                   <button id="userLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200">Login</button>
+                                   <button id="userRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200">Register</button>
                                </div>
                            </div>
                            <!-- Logged In State -->
@@ -123,23 +187,23 @@
                     </li>
                     <!-- Advocate Dropdown -->
                     <li class="relative">
-                        <button id="advocate-menu-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors w-full text-left md:w-auto md:text-center flex items-center space-x-2">
+                        <button id="advocate-menu-btn" class="px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 rounded-xl font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-300 w-full text-left md:w-auto md:text-center flex items-center space-x-2 shadow-sm">
                             <span>Advocate</span>
                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </button>
-                        <div id="advocate-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200">
+                        <div id="advocate-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200/50 backdrop-blur-sm">
                            <!-- Logged Out State -->
                            <div id="advocate-logged-out-view">
                                <div class="p-2">
-                                   <button id="advocateLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Login</button>
-                                   <button id="advocateRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Register</button>
+                                   <button id="advocateLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200">Login</button>
+                                   <button id="advocateRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200">Register</button>
                                </div>
                            </div>
                            <!-- Logged In State -->
                            <div id="advocate-logged-in-view" class="hidden">
                                <div class="p-2">
-                                    <button data-target="advocate-register-section" class="page-button text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Advocate Register</button>
-                                    <button id="advocateLogoutBtn" class="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md">Logout</button>
+                                    <button data-target="advocate-register-section" class="page-button text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 rounded-lg transition-all duration-200">Advocate Register</button>
+                                    <button id="advocateLogoutBtn" class="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200">Logout</button>
                                </div>
                            </div>
                         </div>
@@ -153,138 +217,157 @@
             <!-- Main Home Page Section -->
             <div id="home-section">
                 <!-- Hero Section --> 
-                <section id="home" class="relative text-center text-white py-8 md:py-10 rounded-3xl overflow-hidden shadow-2xl bg-indigo-600 hero-pattern slider-container mt-8">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-700 to-purple-800 opacity-90"></div>
+                <section id="home" class="relative text-center text-white py-12 md:py-16 rounded-3xl overflow-hidden shadow-2xl hero-pattern slider-container mt-8">
+                    <div class="absolute inset-0 opacity-20">
+                        <div class="absolute top-10 left-10 w-20 h-20 bg-white rounded-full opacity-10 floating-animation"></div>
+                        <div class="absolute top-32 right-16 w-16 h-16 bg-white rounded-full opacity-10 floating-animation" style="animation-delay: -2s;"></div>
+                        <div class="absolute bottom-20 left-20 w-12 h-12 bg-white rounded-full opacity-10 floating-animation" style="animation-delay: -4s;"></div>
+                        <div class="absolute bottom-32 right-32 w-24 h-24 bg-white rounded-full opacity-10 floating-animation" style="animation-delay: -1s;"></div>
+                    </div>
                     <div class="slider-wrapper" id="sliderWrapper">
                         <!-- Slide 1: LawBuddy -->
                         <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
-                            <span class="text-5xl mb-2">🤖</span>
-                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">LawBuddy: Your AI Legal Assistant</h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                            <div class="text-6xl mb-4 floating-animation">🤖</div>
+                            <h1 class="hero-title text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">LawBuddy: Your AI Legal Assistant</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-95 leading-relaxed mb-8">
                                 Get instant answers to your legal questions, understand your rights, and connect with lawyers.
                             </p>
-                            <button data-target="chatbot-section" class="btn btn-primary page-button">Ask LawBuddy Now</button>
+                            <button data-target="chatbot-section" class="btn btn-primary page-button pulse-glow">Ask LawBuddy Now</button>
                         </div>
                         <!-- Slide 2: Get Advocate -->
                         <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
-                             <span class="text-5xl mb-2">👩‍⚖️</span>
-                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">AI-Powered Advocate Matching</h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                             <div class="text-6xl mb-4 floating-animation">👩‍⚖️</div>
+                            <h1 class="hero-title text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">AI-Powered Advocate Matching</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-95 leading-relaxed mb-8">
                                 Analyze your case with AI to get matched with the best legal advocate for your specific needs.
                             </p>
-                            <button data-target="recommendation-section" class="btn btn-primary page-button">Find Your Advocate</button>
+                            <button data-target="recommendation-section" class="btn btn-primary page-button pulse-glow">Find Your Advocate</button>
                         </div>
                         <!-- Slide 3: Constitution of India -->
                         <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
-                            <span class="text-5xl mb-2">🏛️</span>
-                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">Explore the Constitution of India</h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                            <div class="text-6xl mb-4 floating-animation">🏛️</div>
+                            <h1 class="hero-title text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">Explore the Constitution of India</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-95 leading-relaxed mb-8">
                                Dive into the articles, amendments, and fundamental principles of India's supreme law in an easy-to-understand format.
                             </p>
-                            <button data-target="coi-section" class="btn btn-primary page-button">Start Exploring</button>
+                            <button data-target="coi-section" class="btn btn-primary page-button pulse-glow">Start Exploring</button>
                         </div>
                         <!-- Slide 4: Indian Law Quiz -->
                         <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
-                             <span class="text-5xl mb-2">📝</span>
-                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">Test Your Legal Knowledge</h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                             <div class="text-6xl mb-4 floating-animation">📝</div>
+                            <h1 class="hero-title text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">Test Your Legal Knowledge</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-95 leading-relaxed mb-8">
                                 Take our interactive quiz on Indian law and the constitution. Challenge yourself and see your score!
                             </p>
-                            <button data-target="quiz-section" class="btn btn-primary page-button">Take the Quiz</button>
+                            <button data-target="quiz-section" class="btn btn-primary page-button pulse-glow">Take the Quiz</button>
                         </div>
                     </div>
                     <div class="slider-nav">
-                        <button id="prevBtn" aria-label="Previous Slide"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                        <button id="nextBtn" aria-label="Next Slide"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                        <button id="prevBtn" aria-label="Previous Slide" class="glass-effect hover:bg-white hover:bg-opacity-20 transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                        <button id="nextBtn" aria-label="Next Slide" class="glass-effect hover:bg-white hover:bg-opacity-20 transition-all duration-300"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
                     </div>
                     <div class="slider-dots" id="sliderDots"></div>
                 </section>
 
                 <!-- Services Section -->
-                <section id="services" class="py-16">
-                    <h2 class="text-center text-3xl font-bold text-gray-800 mb-10">Our Services</h2>
+                <section id="services" class="py-20">
+                    <div class="text-center mb-16">
+                        <h2 class="hero-title text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Services</h2>
+                        <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full"></div>
+                        <p class="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">Comprehensive legal solutions powered by AI technology</p>
+                    </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">🤖</span><h3 class="text-xl font-semibold text-indigo-600">LawBuddy</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">🤖</div>
+                                <h3 class="text-xl font-semibold text-gray-800">LawBuddy</h3>
                             </div>
                             <p class="text-gray-600 mb-6">Your AI-powered legal assistant simplifies law for all. Ask questions, know your rights, explore solutions, and connect with lawyers — all in one place.</p>
-                            <a href="chatbot.html"><button data-target="chatbot-section" class="btn btn-primary w-full page-button">Get Consultation</button></a>
+                            <a href="chatbot.html"><button data-target="chatbot-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">Get Consultation</button></a>
                         </div>
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">⚖️</span><h3 class="text-xl font-semibold text-indigo-600">Get Advocate</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">⚖️</div>
+                                <h3 class="text-xl font-semibold text-gray-800">Get Advocate</h3>
                             </div>
                             <p class="text-gray-600 mb-6">Instant legal reports with automated analysis for fast, accurate documentation. AI suggests advocates based on your case.</p>
-                            <a href="recommendation.html"><button data-target="recommendation-section" class="btn btn-primary w-full page-button">Analyze Case</button></a>
+                            <a href="recommendation.html"><button data-target="recommendation-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">Analyze Case</button></a>
                         </div>
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">👩‍⚖️</span><h3 class="text-xl font-semibold text-indigo-600">Advocates</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">👩‍⚖️</div>
+                                <h3 class="text-xl font-semibold text-gray-800">Advocates</h3>
                             </div>
                             <p class="text-gray-600 mb-6">Browse verified advocates by specialization and easily connect for trusted legal advice, guidance, support, and representation services.</p>
-                            <a href="lawyer.html"><button data-target="advocates-section" class="btn btn-primary w-full page-button">View Lawyers</button></a>
+                            <a href="lawyer.html"><button data-target="advocates-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">View Lawyers</button></a>
                         </div>
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">📖</span><h3 class="text-xl font-semibold text-indigo-600">ConstiLearn</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">📖</div>
+                                <h3 class="text-xl font-semibold text-gray-800">ConstiLearn</h3>
                             </div>
                             <p class="text-gray-600 mb-6">An interactive platform to explore the Constitution of India through engaging quizzes and easy-to-understand learning modules.</p>
-                            <a href="legaleagle.html"><button data-target="quiz-section" class="btn btn-primary w-full page-button">Start Quiz</button></a>
+                            <a href="legaleagle.html"><button data-target="quiz-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">Start Quiz</button></a>
                         </div>
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">📈</span><h3 class="text-xl font-semibold text-indigo-600">Case Tracking System</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">📈</div>
+                                <h3 class="text-xl font-semibold text-gray-800">Case Tracking System</h3>
                             </div>
                             <p class="text-gray-600 mb-6">Monitor the status and progress of your legal cases in real-time. Get automated updates and access all case-related documents in one secure place.</p>
-                            <a href="case.html"><button data-target="case-tracking-section" class="btn btn-primary w-full page-button">Track Your Case</button></a>
+                            <a href="case.html"><button data-target="case-tracking-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">Track Your Case</button></a>
                         </div>
-                        <div class="card">
+                        <div class="card service-card">
                             <div class="flex items-center space-x-4 mb-4">
-                                <span class="text-4xl">🏛️</span><h3 class="text-xl font-semibold text-indigo-600">Uttarakhand Gov Portal</h3>
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-lg">🏛️</div>
+                                <h3 class="text-xl font-semibold text-gray-800">Uttarakhand Gov Portal</h3>
                             </div>
                             <p class="text-gray-600 mb-6">One-stop portal for Uttarakhand government services, legal resources, and public records—streamlining access to state legal systems.</p>
-                            <a href="ugp.html"><button data-target="uttarakhand-portal-section" class="btn btn-primary w-full page-button">Visit Portal</button></a>
+                            <a href="ugp.html"><button data-target="uttarakhand-portal-section" class="btn btn-primary w-full page-button shadow-lg hover:shadow-xl transition-shadow duration-300">Visit Portal</button></a>
                         </div>
                     </div>
                 </section>
 
                 <!-- Features Section -->
-                <section id="features" class="py-16 bg-white rounded-3xl shadow-inner">
+                <section id="features" class="py-20 bg-gradient-to-br from-gray-50 to-white rounded-3xl shadow-inner border border-gray-100">
                     <div class="container mx-auto px-4">
-                        <h2 class="text-center text-3xl font-bold text-gray-800 mb-12">Platform Features</h2>
+                        <div class="text-center mb-16">
+                            <h2 class="hero-title text-4xl md:text-5xl font-bold text-gray-800 mb-4">Platform Features</h2>
+                            <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full"></div>
+                            <p class="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">Advanced technology meets legal expertise</p>
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                             <!-- Feature 1: AI Legal Analysis -->
-                            <div class="text-center">
-                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                            <div class="text-center group">
+                                <div class="feature-icon flex items-center justify-center h-16 w-16 rounded-full text-white mx-auto mb-6 shadow-lg">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                                 </div>
-                                <h3 class="text-xl font-semibold mb-2 text-gray-800">AI Legal Analysis</h3>
-                                <p class="text-gray-600">Our advanced AI analyzes your case details to provide initial insights and recommend the most suitable legal experts.</p>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800 group-hover:text-indigo-600 transition-colors duration-300">AI Legal Analysis</h3>
+                                <p class="text-gray-600 leading-relaxed">Our advanced AI analyzes your case details to provide initial insights and recommend the most suitable legal experts.</p>
                             </div>
                             <!-- Feature 2: 24/7 LawBuddy Chat -->
-                            <div class="text-center">
-                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                            <div class="text-center group">
+                                <div class="feature-icon flex items-center justify-center h-16 w-16 rounded-full text-white mx-auto mb-6 shadow-lg">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                 </div>
-                                <h3 class="text-xl font-semibold mb-2 text-gray-800">24/7 LawBuddy Chat</h3>
-                                <p class="text-gray-600">Get instant answers to your legal queries anytime with our intelligent chatbot, designed to simplify complex legal terms.</p>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800 group-hover:text-indigo-600 transition-colors duration-300">24/7 LawBuddy Chat</h3>
+                                <p class="text-gray-600 leading-relaxed">Get instant answers to your legal queries anytime with our intelligent chatbot, designed to simplify complex legal terms.</p>
                             </div>
                             <!-- Feature 3: Verified Advocates -->
-                            <div class="text-center">
-                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                            <div class="text-center group">
+                                <div class="feature-icon flex items-center justify-center h-16 w-16 rounded-full text-white mx-auto mb-6 shadow-lg">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                                 </div>
-                                <h3 class="text-xl font-semibold mb-2 text-gray-800">Verified Advocates</h3>
-                                <p class="text-gray-600">Connect with a network of experienced and verified legal professionals specializing in various fields of Indian law.</p>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800 group-hover:text-indigo-600 transition-colors duration-300">Verified Advocates</h3>
+                                <p class="text-gray-600 leading-relaxed">Connect with a network of experienced and verified legal professionals specializing in various fields of Indian law.</p>
                             </div>
                             <!-- Feature 4: Interactive Learning -->
-                            <div class="text-center">
-                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                            <div class="text-center group">
+                                <div class="feature-icon flex items-center justify-center h-16 w-16 rounded-full text-white mx-auto mb-6 shadow-lg">
                                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
-                                <h3 class="text-xl font-semibold mb-2 text-gray-800">Interactive Learning</h3>
-                                <p class="text-gray-600">Test your knowledge with quizzes and explore the Constitution of India through our easy-to-navigate educational resources.</p>
+                                <h3 class="text-xl font-semibold mb-3 text-gray-800 group-hover:text-indigo-600 transition-colors duration-300">Interactive Learning</h3>
+                                <p class="text-gray-600 leading-relaxed">Test your knowledge with quizzes and explore the Constitution of India through our easy-to-navigate educational resources.</p>
                             </div>
                         </div>
                     </div>
@@ -305,13 +388,24 @@
             <section id="privacy-section" class="page-section"></section>
         </main>
 
-        <footer class="bg-gray-800 text-white py-8">
+        <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-12">
             <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+                <div class="mb-6">
+                    <div class="flex items-center justify-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-white hero-title">NYAY4U</span>
+                    </div>
+                    <p class="text-gray-300 max-w-md mx-auto">Empowering citizens with AI-driven legal solutions and comprehensive legal education.</p>
+                </div>
                 <div class="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-4">
                     <span>&copy; 2025 AI Law Services. All rights reserved.</span>
                     <div class="flex space-x-4">
-                       <button data-target="terms-section" class="public-page-button hover:text-white transition-colors">Terms & Conditions</button>
-                        <button data-target="privacy-section" class="public-page-button hover:text-white transition-colors">Privacy Policy</button>
+                       <button data-target="terms-section" class="public-page-button hover:text-indigo-400 transition-colors duration-300">Terms & Conditions</button>
+                        <button data-target="privacy-section" class="public-page-button hover:text-indigo-400 transition-colors duration-300">Privacy Policy</button>
                     </div>
                 </div>
             </div>
