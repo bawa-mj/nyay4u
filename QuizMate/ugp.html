@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uttarakhand Government Portal Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .portal-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://placehold.co/1200x400/3498db/ffffff?text=Scenic+Uttarakhand');
+            background-size: cover;
+            background-position: center;
+        }
+        .gradient-bg {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+        }
+
+        
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <div class="flex items-center space-x-2">
+                <img src="logo-1-1.png" alt="Uttarakhand Logo" class="h-14 w-14">
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
+                    Uttarakhand Government Portal
+                </h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#portals" class="text-white hover:text-blue-200 transition-colors duration-300 font-medium">Portals</a>
+                <a href="#about" class="text-white hover:text-blue-200 transition-colors duration-300 font-medium">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-white text-center py-20 px-4">
+        <h2 class="text-5xl font-extrabold mb-4 animate-fade-in-down">A Gateway to Government Services</h2>
+        <p class="text-xl max-w-3xl mx-auto mb-8 animate-fade-in-up">
+            Discover a curated list of essential government portals and services for the citizens of Uttarakhand.
+        </p>
+        <div class="w-full max-w-xl mx-auto">
+            <div class="relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="search-bar" placeholder="Search for a portal (e.g., 'Tourism', 'Police')" class="w-full py-3 pl-12 pr-4 rounded-full bg-white text-gray-800 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-shadow duration-300 shadow-lg" onkeyup="filterPortals()">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Main Content Section -->
+    <main class="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <!-- Portals List Section -->
+        <section id="portals" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Card 1: E-District Portal -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-file-alt text-3xl text-indigo-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Apuni Sarkar (E-District)</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    The single-window portal for various citizen services like certificates (caste, income), ration cards, and more.
+                </p>
+                <a href="https://eservices.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Card 2: Employment Exchange Portal -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-briefcase text-3xl text-green-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Rojgar Prayag Portal</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    A portal for job seekers to register, find vacancies, and access career services.
+                </p>
+                <a href="https://rojgar.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                     <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Card 3: JanSamarth Portal -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-hand-holding-dollar text-3xl text-purple-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">JanSamarth Portal</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    A national portal linking various government-sponsored credit-linked schemes on a single platform.
+                </p>
+                <a href="https://www.jansamarth.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                     <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Card 4: myScheme Portal -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-tasks text-3xl text-yellow-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">myScheme Portal</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    Find and apply for government schemes based on your eligibility. This portal helps you discover the right schemes for you.
+                </p>
+                <a href="https://www.myscheme.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                   <span>Visit Official Site</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Card 5: Food, Civil Supplies & Consumer Affairs -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-utensils text-3xl text-red-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Food & Civil Supplies</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    Official website for information regarding ration cards, food schemes, and other consumer-related services.
+                </p>
+                <a href="http://fcs.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                   <span>Visit Official Site</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Card 6: Uttarakhand Tourism -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-mountain-sun text-3xl text-orange-500 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Uttarakhand Tourism</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    Official portal for tourists to explore Uttarakhand, find travel information, and discover new destinations.
+                </p>
+                <a href="https://uttarakhandtourism.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                     <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <!-- Card 7: Uttarakhand Transport Department (RTO) -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-car text-3xl text-gray-700 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Transport Dept (RTO)</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    The official website for all transport-related services, including vehicle registration, driving licenses, and more.
+                </p>
+                <a href="https://transport.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                     <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Card 8: Uttarakhand Police Portal -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                 <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-shield-halved text-3xl text-blue-800 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Uttarakhand Police</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    Official portal for law and order, citizen services, and information related to the Uttarakhand Police Department.
+                </p>
+                <a href="https://uttarakhandpolice.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                   <span>Visit Official Site</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- Card 9: Chief Minister's Office (CMO) -->
+            <div class="portal-card bg-white rounded-xl shadow-lg p-6 border border-gray-200 flex flex-col">
+                <div class="flex items-center mb-4">
+                    <i class="fa-solid fa-landmark text-3xl text-indigo-600 mr-4"></i>
+                    <h3 class="text-2xl font-semibold text-gray-800">Chief Minister's Office</h3>
+                </div>
+                <p class="text-gray-600 mb-4 flex-grow">
+                    Official website of the Chief Minister, providing info on state initiatives, policies, and the CM's activities.
+                </p>
+                <a href="https://cmo.uk.gov.in/" target="_blank" class="w-full text-center inline-block gradient-bg text-white font-semibold py-3 px-6 rounded-lg hover:brightness-110 transition-all duration-300 flex items-center justify-center space-x-2">
+                    <span>Visit Official Site</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+             <!-- No Results Found Message -->
+            <div id="no-results" class="hidden col-span-1 sm:col-span-2 lg:col-span-3 text-center py-12">
+                <i class="fa-solid fa-search text-5xl text-gray-400 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-gray-700">No Portals Found</h3>
+                <p class="text-gray-500 mt-2">Try adjusting your search terms.</p>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section id="about" class="mt-20 text-center bg-white p-12 rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">About This Portal Hub</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                This platform is an unofficial, informational hub created to provide easy access to the official government portals of Uttarakhand. Our goal is to simplify the process of finding and using digital government services for every citizen.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-gray-400 py-8 mt-16 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto text-center">
+            <p class="text-sm mb-4">
+                <strong class="text-white">Disclaimer:</strong> This is not an official government site. It is an informational resource to help citizens find official Uttarakhand government websites.
+            </p>
+             <p class="text-sm mt-2">&copy; 2025 Uttarakhand Portal Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="to-top" class="hidden fixed bottom-8 right-8 gradient-bg text-white p-3 rounded-full shadow-lg hover:brightness-110 transition-all duration-300">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+    <script>
+        // Search filter logic
+        function filterPortals() {
+            const input = document.getElementById('search-bar');
+            const filter = input.value.toUpperCase();
+            const section = document.getElementById('portals');
+            const cards = section.getElementsByClassName('portal-card');
+            let found = false;
+
+            for (let i = 0; i < cards.length; i++) {
+                const h3 = cards[i].getElementsByTagName("h3")[0];
+                const p = cards[i].getElementsByTagName("p")[0];
+                if (h3 || p) {
+                    const txtValue = (h3.textContent || h3.innerText) + (p.textContent || p.innerText);
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        cards[i].style.display = "";
+                        found = true;
+                    } else {
+                        cards[i].style.display = "none";
+                    }
+                }       
+            }
+
+            const noResults = document.getElementById('no-results');
+            if (found) {
+                noResults.classList.add('hidden');
+            } else {
+                noResults.classList.remove('hidden');
+            }
+        }
+
+        // Back to top button logic
+        const toTopBtn = document.getElementById('to-top');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                toTopBtn.classList.remove('hidden');
+            } else {
+                toTopBtn.classList.add('hidden');
+            }
+        };
+    </script>
+
+</body>
+</html>
+

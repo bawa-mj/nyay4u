@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Report Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .header-icon {
+            padding: 0.75rem;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .header-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1.5rem 1.5rem 0;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .textarea-container {
+            position: relative;
+        }
+
+        .textarea {
+            width: 100%;
+            padding: 0.75rem 3.5rem 0.75rem 0.75rem; /* Added right padding for mic button */
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+            color: #111827;
+            resize: none;
+            font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #d1d5db;
+            color: #374151;
+        }
+
+        .btn-outline:hover {
+            background: #f9fafb;
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        /* Loading Styles */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Report Styles */
+        .report-divider {
+            width: 6rem;
+            height: 0.25rem;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            margin: 0 auto;
+            border-radius: 9999px;
+        }
+
+        .report-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-content {
+            color: #374151;
+            line-height: 1.75;
+            white-space: pre-line;
+        }
+
+        /* Lawyer Card Styles */
+        .lawyer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .lawyer-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .lawyer-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: scale(1.02);
+        }
+
+        .lawyer-avatar {
+            width: 5rem;
+            height: 5rem;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .lawyer-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .lawyer-location {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Learn More Section */
+        .learn-more-section {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .learn-more-content {
+            font-size: 0.875rem;
+            color: #6b7280;
+            white-space: pre-line;
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+
+        /* Icons */
+        .icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            fill: currentColor;
+        }
+
+        .icon-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2rem;
+            }
+            
+            .lawyer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 1rem 0.5rem;
+            }
+        }
+
+        /* Microphone Button Styles */
+        .mic-button {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #6366f1;
+            border: none;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .mic-button:hover {
+            background: #4f46e5;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .mic-button.recording {
+            background: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        .mic-button.recording:hover {
+            background: #dc2626;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Toast Notification Styles */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(to right, #10b981, #34d399);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 2000;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContainer" class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-icon-container">
+                <div class="header-icon">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                        <path d="m12 15 2-5L9 4l-7 7 7 7 5-2Z"/>
+                        <path d="m8 17 2-5-4-3-2 5"/>
+                        <path d="m17 7 2 5-4 3-2-5"/>
+                    </svg>
+                </div>
+                <h1 class="header-title">Legal Report Generator</h1>
+            </div>
+            <p class="header-description">
+                Enter the details of an incident to generate a comprehensive legal report with case categorization and lawyer recommendations.
+            </p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                    Incident Description
+                </h2>
+                <p class="card-description">Provide a detailed description of the incident for analysis</p>
+            </div>
+            <div class="card-content space-y-4">
+                <div class="form-group">
+                    <label for="incident" class="label">Describe the incident</label>
+                    <div class="textarea-container">
+                        <textarea 
+                            id="incident" 
+                            class="textarea" 
+                            rows="5" 
+                            placeholder="e.g., A contract for a property sale was breached, leading to financial loss for the buyer."
+                        ></textarea>
+                        <button id="micButton" class="mic-button" title="Click to start voice input">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                <path d="M12 19v4"/>
+                                <path d="M8 23h8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button id="generateBtn" class="btn btn-primary">
+                    Generate Legal Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            Generating report...
+        </div>
+
+        <!-- Error Message -->
+        <div id="error" class="alert alert-error hidden"></div>
+
+        <!-- Report Results -->
+        <div id="reportContainer" class="hidden space-y-6">
+            <div class="text-center">
+                <h2 class="report-title">Legal Report</h2>
+                <div class="report-divider"></div>
+            </div>
+
+            <!-- Incident Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Incident Summary</h3>
+                </div>
+                <div class="card-content">
+                    <p id="incidentSummary" class="report-content"></p>
+                </div>
+            </div>
+
+            <!-- Case Categorization -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Case Categorization</h3>
+                </div>
+                <div class="card-content">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-weight: 500; color: #374151;">Incident Type:</span>
+                        <span id="incidentCategory" class="badge"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legal Provisions -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Applicable Legal Provisions</h3>
+                </div>
+                <div class="card-content space-y-4">
+                    <div id="legalProvisions" class="report-content"></div>
+                    <button id="learnMoreBtn" class="btn btn-outline">
+                        Learn More About BNS/IPC Sections
+                        <svg id="chevronIcon" class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"/>
+                        </svg>
+                    </button>
+                    <div id="learnMoreSection" class="learn-more-section hidden">
+                        <div id="learnMoreLoading" class="loading hidden">
+                            <div class="spinner"></div>
+                            Loading BNS/IPC details...
+                        </div>
+                        <div id="learnMoreContent" class="learn-more-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommended Lawyers -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="m22 21-3-3m0 0a5 5 0 1 0-7-7 5 5 0 0 0 7 7z"/>
+                        </svg>
+                        Recommended Lawyers
+                    </h3>
+                    <p class="card-description">Specialized legal professionals for your case type. Click a profile to view more.</p>
+                </div>
+                <div class="card-content">
+                    <div id="lawyerGrid" class="lawyer-grid"></div>
+                    <p id="noLawyers" class="text-center hidden" style="color: #6b7280; padding: 2rem 0;">
+                        No specific lawyer recommendations found for this case type.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Advocate Page (Profile and Actions) -->
+    <div id="advocatePage" class="container hidden">
+        <div class="header text-center">
+            <div id="advocatePageAvatar" class="lawyer-avatar" style="margin:0 auto 1rem;"></div>
+            <h1 id="advocatePageName" class="header-title" style="font-size: 2rem;"></h1>
+            <p id="advocatePageSpecialization" class="header-description" style="margin-top: 0.5rem;"></p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Contact this Advocate</h3>
+                <p class="card-description">Your legal report will be sent automatically when you initiate a conversation.</p>
+            </div>
+            <div class="card-content space-y-4">
+                <div>
+                    <a href="profile.html"><button id="startConversationBtn" class="btn btn-primary" style="width: 100%;">
+                        <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        Start Conversation
+                    </button></a>
+                </div>
+                <button id="backToMainBtn" class="btn btn-outline" style="width: 100%;">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to Main Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Your Legal Report -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                    Your Legal Report
+                </h3>
+                <p class="card-description">This information will be shared with the advocate upon contact.</p>
+            </div>
+            <div class="card-content space-y-4">
+                <div>
+                    <h4 class="label">Incident Summary</h4>
+                    <p id="submittedIncidentSummary" class="report-content" style="padding: 1rem; background: #f9fafb; border-radius: 0.5rem;"></p>
+                </div>
+                <div>
+                    <h4 class="label">Case Categorization</h4>
+                    <p id="submittedIncidentCategory" class="report-content" style="padding: 1rem; background: #f9fafb; border-radius: 0.5rem;"></p>
+                </div>
+                 <div>
+                    <h4 class="label">Applicable Legal Provisions</h4>
+                    <p id="submittedLegalProvisions" class="report-content" style="padding: 1rem; background: #f9fafb; border-radius: 0.5rem;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="toast">
+        Your inquiry has been sent successfully!
+    </div>
+
+    <script>
+        // API Configuration
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=";
+        const API_KEY = "AIzaSyDpuAFbE36Q-nb6nhSSeEEuniJVpYsglIk"; // API key would be provided at runtime
+
+        // Lawyer Data
+        const criminalLawyers = [
+            { name: "Suresh Sinha", specialization: "Criminal Law", location: "New Delhi", initials: "SS" },
+            { name: "John Smith", specialization: "White-Collar Crime", location: "Mumbai", initials: "JS" },
+            { name: "Priya Sharma", specialization: "Cybercrimes", location: "Bangalore", initials: "PS" },
+            { name: "Rahul Singh", specialization: "Fraud & Economic Offenses", location: "Kolkata", initials: "RS" }
+        ];
+
+        const civilLawyers = [
+            { name: "Anjali Gupta", specialization: "Property Law", location: "New Delhi", initials: "AG" },
+            { name: "Rajat Kapoor", specialization: "Civil Litigation", location: "Mumbai", initials: "RK" },
+            { name: "Priya Kapoor", specialization: "Family Law", location: "Chennai", initials: "PK" },
+            { name: "Vijay Kumar", specialization: "Consumer Protection", location: "Hyderabad", initials: "VK" }
+        ];
+
+        // DOM Elements
+        const mainContainer = document.getElementById('mainContainer');
+        const incidentTextarea = document.getElementById('incident');
+        const generateBtn = document.getElementById('generateBtn');
+        const micButton = document.getElementById('micButton');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const reportContainer = document.getElementById('reportContainer');
+        const incidentSummary = document.getElementById('incidentSummary');
+        const incidentCategory = document.getElementById('incidentCategory');
+        const legalProvisions = document.getElementById('legalProvisions');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+        const learnMoreSection = document.getElementById('learnMoreSection');
+        const learnMoreLoading = document.getElementById('learnMoreLoading');
+        const learnMoreContent = document.getElementById('learnMoreContent');
+        const lawyerGrid = document.getElementById('lawyerGrid');
+        const noLawyers = document.getElementById('noLawyers');
+        const chevronIcon = document.getElementById('chevronIcon');
+        
+        // Advocate Page elements
+        const advocatePage = document.getElementById('advocatePage');
+        const advocatePageAvatar = document.getElementById('advocatePageAvatar');
+        const advocatePageName = document.getElementById('advocatePageName');
+        const advocatePageSpecialization = document.getElementById('advocatePageSpecialization');
+        const submittedIncidentSummary = document.getElementById('submittedIncidentSummary');
+        const submittedIncidentCategory = document.getElementById('submittedIncidentCategory');
+        const submittedLegalProvisions = document.getElementById('submittedLegalProvisions');
+        const startConversationBtn = document.getElementById('startConversationBtn');
+        const backToMainBtn = document.getElementById('backToMainBtn');
+
+        // Toast
+        const successToast = document.getElementById('successToast');
+
+        // State
+        let currentReport = null;
+        let selectedLawyer = null;
+        let showLearnMore = false;
+        let recognition = null;
+        let isRecording = false;
+
+        // Event Listeners
+        generateBtn.addEventListener('click', generateLegalReport);
+        learnMoreBtn.addEventListener('click', toggleLearnMore);
+        micButton.addEventListener('click', toggleVoiceInput);
+        backToMainBtn.addEventListener('click', backToMainReport);
+        
+        startConversationBtn.addEventListener('click', () => {
+            console.log('Sending report to advocate:', currentReport);
+            showSuccessToast('Report sent! Conversation feature coming soon.');
+        });
+
+        // Functions
+        async function generateLegalReport() {
+            const incidentDescription = incidentTextarea.value.trim();
+            
+            if (!incidentDescription) {
+                showError('Please enter an incident description.');
+                return;
+            }
+
+            setLoading(true);
+            hideError();
+            hideReport();
+            hideLearnMore();
+
+            const systemPrompt = `
+                You are a legal report generator. Your task is to analyze an incident description and provide a comprehensive report for a lawyer. The report must contain three parts:
+
+                1. A concise summary of the incident.
+                2. A categorization of the case as either 'Criminal' or 'Civil'.
+                3. A very concise, bulleted list of the most relevant and applicable legal provisions from a general constitution or legal framework that would apply to this type of incident. Each bullet point should be a very brief, single-line summary of a key legal principle or section.
+
+                Return your response in a structured JSON format with three keys: 'incidentCategory', 'incidentSummary', and 'legalProvisions'. Do not include any other text or explanation outside of the JSON.
+            `.trim();
+
+            const userQuery = `
+                Generate a legal report for the following incident: "${incidentDescription}".
+                Categorize the incident and provide the applicable legal provisions.
+                Return the result in the specified JSON format.
+            `.trim();
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            incidentCategory: { type: "STRING" },
+                            incidentSummary: { type: "STRING" },
+                            legalProvisions: { type: "STRING" }
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetch(API_URL + API_KEY, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const jsonString = candidate.content.parts[0].text;
+                    const parsedData = JSON.parse(jsonString);
+                    currentReport = parsedData;
+                    displayReport(parsedData);
+                } else {
+                    throw new Error('API response was not in the expected format.');
+                }
+            } catch (err) {
+                console.error('An error occurred:', err);
+                showError('Failed to generate the report. Please try again.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function generateLegalProvisionsDetails() {
+            const incidentDescription = incidentTextarea.value.trim();
+            
+            learnMoreLoading.classList.remove('hidden');
+            learnMoreContent.textContent = '';
+
+            const systemPrompt = `
+                You are a legal expert. Given an incident description, your task is to provide a brief, bulleted list of the most relevant sections and articles from the Bharatiya Nyaya Sanhita (BNS) and the Indian Penal Code (IPC). Be very concise and to the point.
+            `.trim();
+
+            const userQuery = `
+                Provide BNS and IPC sections for the following incident: "${incidentDescription}".
+            `.trim();
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            try {
+                const response = await fetch(API_URL + API_KEY, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                const content = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (content) {
+                    learnMoreContent.textContent = content;
+                } else {
+                    learnMoreContent.textContent = 'Could not find specific BNS/IPC details for this incident.';
+                }
+            } catch (err) {
+                console.error('An error occurred:', err);
+                learnMoreContent.textContent = 'Failed to fetch detailed legal provisions. Please try again.';
+            } finally {
+                learnMoreLoading.classList.add('hidden');
+            }
+        }
+
+        function toggleLearnMore() {
+            showLearnMore = !showLearnMore;
+            
+            if (showLearnMore) {
+                learnMoreSection.classList.remove('hidden');
+                chevronIcon.innerHTML = '<polyline points="18,15 12,9 6,15"/>';
+                if (!learnMoreContent.textContent.trim()) {
+                    generateLegalProvisionsDetails();
+                }
+            } else {
+                learnMoreSection.classList.add('hidden');
+                chevronIcon.innerHTML = '<polyline points="6,9 12,15 18,9"/>';
+            }
+        }
+
+        function displayReport(report) {
+            incidentSummary.textContent = report.incidentSummary || 'N/A';
+            incidentCategory.textContent = report.incidentCategory || 'N/A';
+            legalProvisions.textContent = report.legalProvisions || 'N/A';
+            
+            displayRecommendedLawyers(report.incidentCategory);
+            reportContainer.classList.remove('hidden');
+        }
+
+        function displayRecommendedLawyers(category) {
+            const lawyers = getRecommendedLawyers(category);
+            lawyerGrid.innerHTML = ''; // Clear previous results
+            
+            if (lawyers.length > 0) {
+                lawyers.forEach(lawyer => {
+                    const lawyerCard = document.createElement('div');
+                    lawyerCard.className = 'lawyer-card';
+                    lawyerCard.setAttribute('title', `View profile of ${lawyer.name}`);
+                    lawyerCard.innerHTML = `
+                        <div class="lawyer-avatar">${lawyer.initials}</div>
+                        <div class="lawyer-name">${lawyer.name}</div>
+                        <div class="badge" style="margin: 0.5rem 0;">${lawyer.specialization}</div>
+                        <div class="lawyer-location">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            ${lawyer.location}
+                        </div>
+                    `;
+                    lawyerCard.addEventListener('click', () => showAdvocateProfile(lawyer));
+                    lawyerGrid.appendChild(lawyerCard);
+                });
+                lawyerGrid.classList.remove('hidden');
+                noLawyers.classList.add('hidden');
+            } else {
+                lawyerGrid.classList.add('hidden');
+                noLawyers.classList.remove('hidden');
+            }
+        }
+
+        function showAdvocateProfile(lawyer) {
+            if (!currentReport) {
+                showError("Cannot view profile without a generated report.");
+                return;
+            }
+            selectedLawyer = lawyer;
+
+            // Populate advocate page details
+            advocatePageAvatar.textContent = selectedLawyer.initials;
+            advocatePageName.textContent = selectedLawyer.name;
+            advocatePageSpecialization.textContent = selectedLawyer.specialization;
+            
+            // Populate the legal report section on the advocate's page
+            submittedIncidentSummary.textContent = currentReport.incidentSummary || 'N/A';
+            submittedIncidentCategory.textContent = currentReport.incidentCategory || 'N/A';
+            submittedLegalProvisions.textContent = currentReport.legalProvisions || 'N/A';
+            
+            // Switch views
+            mainContainer.classList.add('hidden');
+            advocatePage.classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+        
+        function backToMainReport() {
+            advocatePage.classList.add('hidden');
+            mainContainer.classList.remove('hidden');
+            selectedLawyer = null; // Clear selected lawyer state
+        }
+
+        function showSuccessToast(message = 'Action completed successfully!') {
+            successToast.textContent = message;
+            successToast.classList.add('show');
+            setTimeout(() => {
+                successToast.classList.remove('show');
+            }, 3000);
+        }
+
+        function getRecommendedLawyers(category) {
+            if (category.toLowerCase().includes('criminal')) {
+                return criminalLawyers;
+            } else if (category.toLowerCase().includes('civil')) {
+                return civilLawyers;
+            }
+            return [];
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loading.classList.remove('hidden');
+                generateBtn.disabled = true;
+                generateBtn.innerHTML = '<div class="spinner"></div> Generating Report...';
+            } else {
+                loading.classList.add('hidden');
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate Legal Report';
+            }
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.remove('hidden');
+        }
+
+        function hideError() {
+            error.classList.add('hidden');
+        }
+
+        function hideReport() {
+            reportContainer.classList.add('hidden');
+        }
+
+        function hideLearnMore() {
+            showLearnMore = false;
+            learnMoreSection.classList.add('hidden');
+            chevronIcon.innerHTML = '<polyline points="6,9 12,15 18,9"/>';
+        }
+
+        function initializeSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = function() {
+                    isRecording = true;
+                    micButton.classList.add('recording');
+                    micButton.title = 'Click to stop voice input';
+                };
+                
+                recognition.onresult = function(event) {
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript;
+                        }
+                    }
+                    
+                    if (finalTranscript) {
+                        const currentText = incidentTextarea.value;
+                        const newText = currentText ? currentText + ' ' + finalTranscript.trim() : finalTranscript.trim();
+                        incidentTextarea.value = newText;
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    stopVoiceInput();
+                    
+                    let errorMessage = 'Voice input error occurred.';
+                    if (event.error === 'not-allowed') {
+                        errorMessage = 'Microphone access denied. Please allow microphone access and try again.';
+                    } else if (event.error === 'no-speech') {
+                        errorMessage = 'No speech detected. Please try again.';
+                    }
+                    
+                    showError(errorMessage);
+                };
+                
+                recognition.onend = function() {
+                    stopVoiceInput();
+                };
+                
+                return true;
+            }
+            return false;
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                if (!initializeSpeechRecognition()) {
+                    showError('Speech recognition is not supported in your browser. Please use Chrome, Edge, or Safari.');
+                    return;
+                }
+            }
+            
+            if (isRecording) {
+                recognition.stop();
+            } else {
+                hideError();
+                recognition.start();
+            }
+        }
+
+        function stopVoiceInput() {
+            isRecording = false;
+            micButton.classList.remove('recording');
+            micButton.title = 'Click to start voice input';
+        }
+
+        // Initialize speech recognition on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSpeechRecognition();
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Eagle: Learn & Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        
+        /* --- Selection Screen Styles --- */
+        .selection-card {
+            background-color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .selection-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .selection-button {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .selection-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- Learn Section Styles --- */
+        #learn-section { background-color: #f8fafc; } /* gray-50 */
+        .tricolor-gradient {
+            background: linear-gradient(90deg, #FF9933 33.3%, #FFFFFF 33.3%, #FFFFFF 66.6%, #138808 66.6%);
+        }
+        .ashoka-chakra {
+            width: 24px; height: 24px; border: 1px solid #000080; border-radius: 50%; position: relative;
+        }
+        .ashoka-chakra::before, .ashoka-chakra::after {
+            content: ''; position: absolute; top: 50%; left: 50%; background: #000080; transform: translate(-50%, -50%);
+        }
+        .ashoka-chakra::before { width: 2px; height: 100%; }
+        .ashoka-chakra::after { width: 100%; height: 2px; }
+        .spoke {
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 1px; background: #000080; transform-origin: center;
+        }
+        .content-prose h4 { font-size: 1.125rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .content-prose p { line-height: 1.6; }
+        .content-prose ul { list-style-position: inside; }
+        .nav-link-active { background-color: #eff6ff; color: #1d4ed8; font-weight: 600; }
+        .back-button {
+            transition: all 0.2s ease;
+        }
+        .back-button:hover {
+            background-color: #e5e7eb;
+            transform: translateX(-2px);
+        }
+        
+        /* --- Quiz Section Styles --- */
+        #quiz-section {
+            background-image: linear-gradient(to right, #6366f1, #8b5cf6);
+            min-height: 100vh;
+        }
+        #quiz-container {
+            background-color: white;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 1s ease-in-out;
+        }
+        .cta-button, .secondary-button {
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .cta-button { background-image: linear-gradient(to right, #6366f1, #8b5cf6); color: white; }
+        .cta-button:hover, .secondary-button:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4); }
+        .secondary-button { background-color: #e2e8f0; color: #475569; }
+        .option-button { background-color: #f1f5f9; border: 1px solid #cbd5e1; transition: all 0.2s ease-in-out; }
+        .option-button:hover:not(.disabled) { transform: scale(1.02); background-color: #e2e8f0; border-color: #6366f1; }
+        .correct { background-color: #10B981 !important; color: white !important; border-color: #10B981 !important; animation: bounceIn 0.5s; }
+        .incorrect { background-color: #EF4444 !important; color: white !important; border-color: #EF4444 !important; animation: shake 0.5s; }
+        .disabled { pointer-events: none; opacity: 0.7; }
+        #explanation-box { background-color: #f8fafc; border: 1px solid #e2e8f0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceIn { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-20px); } 60% { transform: translateY(-10px); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
+    </style>
+</head>
+<body>
+
+    <!-- Main Selection Screen -->
+    <div id="selection-screen" class="min-h-screen flex flex-col items-center justify-center p-8">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-800">Legal Eagle</h1>
+            <p class="text-xl text-gray-600 mt-4">Your Guide to the Indian Constitution & Law</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+            <!-- Learn Card -->
+            <div class="selection-card rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="text-6xl mb-4">📜</div>
+                    <h2 class="text-2xl font-bold text-gray-900">Learn the Constitution</h2>
+                    <p class="text-gray-600 mt-2 mb-6">Explore a simplified, interactive guide to the Constitution of India.</p>
+                    <button id="select-learn-btn" class="selection-button w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700">Start Learning</button>
+                </div>
+            </div>
+            <!-- Quiz Card -->
+            <div class="selection-card rounded-2xl shadow-lg overflow-hidden">
+                <div class="p-8">
+                    <div class="text-6xl mb-4">⚖️</div>
+                    <h2 class="text-2xl font-bold text-gray-900">Test Your Knowledge</h2>
+                    <p class="text-gray-600 mt-2 mb-6">Take a quiz to challenge yourself and compete on the leaderboard.</p>
+                    <button id="select-quiz-btn" class="selection-button w-full bg-violet-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-violet-700">Start Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Learn Section (Initially hidden) -->
+    <div id="learn-section" class="hidden">
+        <header class="bg-white shadow-md sticky top-0 z-10">
+             <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                         <div class="w-10 h-10 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1.052A11.001 11.001 0 001 12c0 2.236.668 4.33 1.857 6.096M23 12a11.001 11.001 0 00-10-10.948M12 22.948A11.001 11.001 0 0023 12c0-2.236-.668-4.33-1.857-6.096M2.857 6.096A10.966 10.966 0 0112 1.052m0 21.896c-2.83 0-5.46-.99-7.5-2.645m15 0c-2.04.655-4.67.655-6.71 0M12 1.052v2.99m0 15.908v2.99M5.044 18.044L7 16m10 2.044l-1.956-2.044M5.044 5.956L7 8m10-2.044l-1.956 2.044"></path></svg>
+                        </div>
+                        <h1 class="text-2xl font-bold text-gray-800">The Indian Constitution: A Simple Guide</h1>
+                    </div>
+                     <button class="back-to-menu-btn back-button flex items-center font-semibold text-gray-600 p-2 rounded-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
+                        Main Menu
+                    </button>
+                </div>
+            </div>
+            <div class="h-1 tricolor-gradient"></div>
+        </header>
+
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-gray-900">Understanding Our Constitution</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Select a topic from the menu to learn more about the key components of the Constitution of India.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+                <aside class="md:w-1/4 lg:w-1/5">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Categories</h3>
+                    <nav id="constitution-nav" class="space-y-1"></nav>
+                </aside>
+                <main id="constitution-content" class="flex-1 bg-white rounded-xl shadow-lg p-8 min-h-[500px]"></main>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quiz Section (Initially hidden) -->
+    <div id="quiz-section" class="hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+             <div id="quiz-container" class="text-slate-800 p-8 md:p-12 rounded-3xl w-full max-w-2xl relative">
+                <button class="back-to-menu-btn back-button absolute top-4 left-4 flex items-center font-semibold text-gray-500 p-2 rounded-lg text-sm bg-slate-100 hover:bg-slate-200">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Menu
+                </button>
+                <h1 id="game-title" class="text-3xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-indigo-500 to-violet-500 text-transparent bg-clip-text">Indian Law & Constitution Quiz</h1>
+
+                <!-- Start Screen -->
+                <div id="start-screen" class="text-center">
+                    <p class="text-xl mb-8 text-slate-600">Test your knowledge of Indian law and the constitution! Let's see if you can become a legal scholar.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <button id="start-btn" class="cta-button font-bold py-3 px-8 rounded-xl w-full sm:w-auto">Start Quiz</button>
+                        <button id="leaderboard-btn-start" class="secondary-button font-bold py-3 px-8 rounded-xl w-full sm:w-auto">Leaderboard</button>
+                    </div>
+                </div>
+
+                <!-- Quiz Screen -->
+                <div id="quiz-screen" class="hidden">
+                    <div class="flex flex-wrap justify-between items-center mb-4 gap-2 text-sm md:text-base">
+                        <span id="score-display" class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full">Score: 0</span>
+                        <span id="level-display" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">Level: Beginner</span>
+                        <span id="question-count" class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-1 rounded-full">Question 1 of 15</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5 mb-6 shadow-inner">
+                        <div id="progress-bar" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                    </div>
+                    <p id="question-text" class="text-lg md:text-xl text-slate-900 font-semibold mb-6 min-h-[80px]"></p>
+                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+                    <div id="explanation-box" class="hidden p-4 rounded-lg mt-4 shadow-inner">
+                        <h3 class="font-bold mb-2 text-indigo-600">Explanation:</h3>
+                        <p id="explanation-text" class="text-sm md:text-base text-slate-600"></p>
+                    </div>
+                </div>
+
+                <!-- End Screen -->
+                <div id="end-screen" class="hidden text-center">
+                    <h2 id="final-score-text" class="text-2xl md:text-3xl font-bold mb-4">Quiz Complete!</h2>
+                    <p id="final-score-display" class="text-xl md:text-2xl mb-6 font-semibold"></p>
+                    <form id="save-score-form" class="flex flex-col sm:flex-row gap-2 max-w-sm mx-auto mb-6">
+                        <input type="text" id="player-name" placeholder="Enter your name" class="flex-grow p-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required maxlength="15">
+                        <button type="submit" class="cta-button font-bold py-3 px-6 rounded-xl">Save Score</button>
+                    </form>
+                    <div id="end-screen-nav" class="hidden flex-col sm:flex-row gap-4 justify-center">
+                         <button id="restart-btn" class="cta-button font-bold py-3 px-8 rounded-xl w-full sm:w-auto">Play Again</button>
+                         <button id="leaderboard-btn-end" class="secondary-button font-bold py-3 px-8 rounded-xl w-full sm:w-auto">Leaderboard</button>
+                    </div>
+                </div>
+
+                <!-- Leaderboard Screen -->
+                <div id="leaderboard-screen" class="hidden text-center">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-6">Top 10 Scores</h2>
+                    <ol id="leaderboard-list" class="list-decimal list-inside text-left space-y-3 mb-8 bg-slate-50 p-6 rounded-xl shadow-inner"></ol>
+                    <button id="back-to-start-btn" class="cta-button font-bold py-3 px-8 rounded-xl">Back to Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Main Navigation ---
+        const selectionScreen = document.getElementById('selection-screen');
+        const learnSection = document.getElementById('learn-section');
+        const quizSection = document.getElementById('quiz-section');
+        const selectLearnBtn = document.getElementById('select-learn-btn');
+        const selectQuizBtn = document.getElementById('select-quiz-btn');
+        const backToMenuBtns = document.querySelectorAll('.back-to-menu-btn');
+
+        selectLearnBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            learnSection.classList.remove('hidden');
+        });
+
+        selectQuizBtn.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+        });
+        
+        backToMenuBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                learnSection.classList.add('hidden');
+                quizSection.classList.add('hidden');
+                selectionScreen.classList.remove('hidden');
+                // Optional: Reset quiz state when going back
+                if (window.resetQuiz) {
+                    window.resetQuiz();
+                }
+            });
+        });
+
+        // --- Learn Section Script ---
+        (() => {
+            const categories = [
+                { title: "Preamble", icon: "📜", description: "The introduction and soul of the Constitution.", details: `<p><strong>"WE, THE PEOPLE OF INDIA,</strong> having solemnly resolved to constitute India into a <strong>SOVEREIGN SOCIALIST SECULAR DEMOCRATIC REPUBLIC</strong> and to secure to all its citizens:</p><ul class="list-disc list-inside mt-2 space-y-1"><li><strong>JUSTICE</strong>, social, economic and political;</li><li><strong>LIBERTY</strong> of thought, expression, belief, faith and worship;</li><li><strong>EQUALITY</strong> of status and of opportunity;</li><li>and to promote among them all <strong>FRATERNITY</strong> assuring the dignity of the individual and the unity and integrity of the Nation;</li></ul><p class="mt-2"><strong>IN OUR CONSTITUENT ASSEMBLY</strong> this twenty-sixth day of November, 1949, do <strong>HEREBY ADOPT, ENACT AND GIVE TO OURSELVES THIS CONSTITUTION."</strong></p>`},
+                { title: "Nature of the Constitution", icon: "🏗️", description: "Understanding the core characteristics and structure of India's governing document.", details: `<h4>Core Characteristics:</h4><ul class="list-disc list-inside space-y-2"><li><strong>Lengthiest Written Constitution:</strong> It is the most detailed constitution in the world, comprehensively laying out the framework for governance.</li><li><strong>Drawn From Various Sources:</strong> It incorporates features from the constitutions of many countries, including the UK, USA, Ireland, and Canada, adapting them to India's needs.</li><li><strong>Blend of Rigidity and Flexibility (Article 368):</strong> The process of amendment is neither too easy nor too difficult, striking a balance between stability and adaptability.</li><li><strong>Federal System with Unitary Bias:</strong> It establishes a dual polity with a division of powers between the Centre and States, but the Centre holds more power, especially during emergencies.</li><li><strong>Parliamentary Form of Government (Article 74 & 75):</strong> The executive is responsible to the legislature (Parliament), following the British model.</li></ul>`},
+                { title: "Fundamental Rights (Part III)", icon: "🛡️", description: "Basic human rights guaranteed to every citizen.", details: `<p>These rights are covered under <strong>Articles 12 to 35</strong>.</p><h4>Key Rights Include:</h4><ul class="list-disc list-inside space-y-2"><li><strong>Right to Equality (Articles 14-18):</strong> Ensures equality before the law and prohibits discrimination.</li><li><strong>Right to Freedom (Articles 19-22):</strong> Includes freedom of speech, expression, and personal liberty.</li><li><strong>Right against Exploitation (Articles 23-24):</strong> Prohibits human trafficking and forced labor.</li><li><strong>Right to Freedom of Religion (Articles 25-28):</strong> Guarantees freedom of conscience and religion.</li><li><strong>Cultural and Educational Rights (Articles 29-30):</strong> Protects the interests of minorities.</li><li><strong>Right to Constitutional Remedies (Article 32):</strong> The 'heart and soul' of the Constitution. Allows citizens to move the Supreme Court to enforce their rights.</li></ul>`},
+                { title: "Citizenship (Part II)", icon: "🇮🇳", description: "Defines who is considered a citizen of India.", details: `<p>Part II of the Constitution (<strong>Articles 5-11</strong>) deals with Citizenship.</p><h4>Key Points:</h4><ul class="list-disc list-inside space-y-2"><li><strong>Article 5:</strong> Citizenship at the commencement of the Constitution.</li><li><strong>Article 11:</strong> Empowers Parliament to regulate citizenship, leading to the Citizenship Act, 1955.</li><li>India has a single citizenship, unlike the dual citizenship in the USA.</li></ul>`},
+                { title: "Directive Principles (Part IV)", icon: "🧭", description: "Guidelines for the government to frame laws and policies.", details: `<p>These principles (<strong>Articles 36 to 51</strong>) are not enforceable by courts but are fundamental in governance.</p><h4>Examples:</h4><ul class="list-disc list-inside space-y-2"><li><strong>Article 39A:</strong> Free legal aid to the poor.</li><li><strong>Article 40:</strong> Organize village panchayats.</li><li><strong>Article 44:</strong> Secure a Uniform Civil Code.</li><li><strong>Article 45:</strong> Early childhood care and education.</li></ul>`},
+                { title: "Fundamental Duties (Part IV-A)", icon: "🤝", description: "Moral obligations of all citizens.", details: `<p>Added by the 42nd Amendment (1976) under <strong>Article 51-A</strong>.</p><h4>Key Duties Include:</h4><ul class="list-disc list-inside space-y-2"><li>To abide by the Constitution and respect the National Flag and Anthem.</li><li>To promote harmony and brotherhood.</li><li>To protect the natural environment.</li><li>To safeguard public property.</li></ul>`},
+                { title: "The Union Government (Part V)", icon: "🏛️", description: "Structure of the central government.", details: `<p>Covers <strong>Articles 52 to 151</strong>.</p><ul class="list-disc list-inside space-y-2"><li><strong>The President (Article 52):</strong> Executive head of the state.</li><li><strong>Council of Ministers & Prime Minister (Articles 74 & 75):</strong> To aid and advise the President.</li><li><strong>Parliament (Article 79):</strong> Consists of the President, Lok Sabha, and Rajya Sabha.</li><li><strong>The Supreme Court (Article 124):</strong> The apex court of India.</li></ul>`},
+                { title: "The State Governments (Part VI)", icon: "🏢", description: "Structure of the state governments.", details: `<p>Covers <strong>Articles 152 to 237</strong>.</p><ul class="list-disc list-inside space-y-2"><li><strong>The Governor (Article 153):</strong> Executive head of the state.</li><li><strong>Council of Ministers & Chief Minister (Articles 163 & 164):</strong> To aid and advise the Governor.</li><li><strong>State Legislature (Article 168):</strong> Can be bicameral or unicameral.</li><li><strong>High Courts (Article 214):</strong> The highest judicial court in a state.</li></ul>`},
+                { title: "The Judiciary (Parts V & VI)", icon: "⚖️", description: "The independent system of courts.", details: `<p>India has an integrated judiciary.</p><ul class="list-disc list-inside space-y-2 mt-2"><li><strong>Supreme Court:</strong> Its decisions are binding on all other courts.</li><li><strong>High Courts:</strong> Each state or group of states has a High Court.</li><li><strong>Subordinate Courts:</strong> District courts and other lower courts.</li><li><strong>Independence of Judiciary:</strong> Ensured by security of tenure and fixed service conditions for judges.</li></ul>`},
+                { title: "Emergency Provisions (Part XVIII)", icon: "🚨", description: "Special powers for the central government.", details: `<p>Covers <strong>Articles 352-360</strong>.</p><ul class="list-disc list-inside space-y-2 mt-2"><li><strong>National Emergency (Article 352):</strong> On grounds of war, external aggression or armed rebellion.</li><li><strong>State Emergency / President's Rule (Article 356):</strong> When the constitutional machinery in a state fails.</li><li><strong>Financial Emergency (Article 360):</strong> When the financial stability of India is threatened.</li></ul>`},
+                { title: "Key Amendments", icon: "✏️", description: "Important changes made to the Constitution.", details: `<p>The Constitution can be amended under <strong>Article 368</strong>.</p><h4>Notable Amendments:</h4><ul class="list-disc list-inside space-y-2"><li><strong>42nd Amendment (1976):</strong> Known as the 'Mini-Constitution'.</li><li><strong>44th Amendment (1978):</strong> Removed the Right to Property from Fundamental Rights.</li><li><strong>61st Amendment (1989):</strong> Reduced voting age from 21 to 18.</li><li><strong>73rd & 74th Amendments (1992):</strong> Constitutional status for Panchayats & Municipalities.</li><li><strong>86th Amendment (2002):</strong> Made education a Fundamental Right for children (6-14 years).</li><li><strong>101st Amendment (2016):</strong> Introduced the Goods and Services Tax (GST).</li></ul>`}
+            ];
+
+            const navContainer = document.getElementById('constitution-nav');
+            const contentContainer = document.getElementById('constitution-content');
+
+            const showContent = (index) => {
+                if (index < 0 || index >= categories.length) return;
+                const category = categories[index];
+                contentContainer.innerHTML = `<div class="flex items-start sm:items-center flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mb-6"><span class="text-5xl">${category.icon}</span><div><h2 class="text-3xl font-bold text-gray-900">${category.title}</h2><p class="text-gray-600 mt-1 text-lg">${category.description}</p></div></div><div class="mt-6 pt-6 border-t border-gray-200 text-gray-700 space-y-3 content-prose">${category.details}</div>`;
+                document.querySelectorAll('#constitution-nav a').forEach((link, i) => {
+                    link.classList.toggle('nav-link-active', i === index);
+                    link.classList.toggle('text-gray-700', i !== index);
+                    link.classList.toggle('hover:bg-gray-100', i !== index);
+                });
+            };
+
+            categories.forEach((category, index) => {
+                const link = document.createElement('a');
+                link.href = '#';
+                link.className = 'block p-3 rounded-lg transition-colors duration-200 text-gray-700 hover:bg-gray-100';
+                link.textContent = category.title;
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContent(index);
+                });
+                navContainer.appendChild(link);
+            });
+            showContent(0);
+        })();
+
+
+        // --- Quiz Section Script ---
+        (() => {
+            const allQuestions=[{question:"When was the Constitution of India adopted?",options:["15th August 1947","26th November 1949","26th January 1950","2nd October 1948"],answer:1,level:"Beginner",explanation:"The Constituent Assembly adopted the Constitution on November 26, 1949, which is celebrated as Constitution Day or National Law Day. It came into force on January 26, 1950."},{question:"Which of the following is NOT a Fundamental Right in the Constitution of India?",options:["Right to Equality","Right to Freedom","Right to Property","Right to Constitutional Remedies"],answer:2,level:"Beginner",explanation:"The Right to Property was removed from the list of Fundamental Rights by the 44th Amendment Act, 1978. It is now a legal right under Article 300A."},{question:"What does the term 'Republic' in the Preamble of the Indian Constitution mean?",options:["Rule by the people","Hereditary Head of State","Elected Head of State","Rule by a dictator"],answer:2,level:"Beginner",explanation:"A 'Republic' means that the head of the state is not a hereditary monarch, but an elected person. In India, the President is the elected Head of State."},{question:"How many schedules are there in the Constitution of India?",options:["10","12","15","18"],answer:1,level:"Beginner",explanation:"The Constitution of India originally had 8 schedules. Four more schedules were added by various amendments, bringing the total to 12."},{question:"Which part of the Indian Constitution deals with Fundamental Duties?",options:["Part II","Part III","Part IV","Part IV A"],answer:3,level:"Beginner",explanation:"Part IV A of the Constitution, added by the 42nd Amendment, deals with the Fundamental Duties of citizens, inspired by the Constitution of the erstwhile USSR."},{question:"Who is considered the 'Father of the Indian Constitution'?",options:["Mahatma Gandhi","Jawaharlal Nehru","Dr. B.R. Ambedkar","Sardar Patel"],answer:2,level:"Beginner",explanation:"Dr. B.R. Ambedkar was the Chairman of the Drafting Committee of the Constitution and played a pivotal role in its creation."},{question:"The Parliament of India consists of which of the following?",options:["Lok Sabha only","Rajya Sabha only","Lok Sabha, Rajya Sabha, and the President","Lok Sabha, Rajya Sabha, and the Prime Minister"],answer:2,level:"Beginner",explanation:"The Parliament is the supreme legislative body and is composed of the President, the Lok Sabha (House of the People), and the Rajya Sabha (Council of States)."},{question:"In the IPC, 'A, intending to murder Z, fires a rifle at Z. Z is not hit.' What offence has A committed?",options:["Attempt to murder","Assault","No offence","Criminal conspiracy"],answer:0,level:"Intermediate",explanation:"Under Section 307 of the IPC, an attempt to commit murder is a punishable offense even if the intended victim is not harmed, as the intent and act were present."},{question:"Which section of the IPC defines 'criminal conspiracy'?",options:["Section 120A","Section 124A","Section 302","Section 420"],answer:0,level:"Intermediate",explanation:"Section 120A of the IPC defines criminal conspiracy as an agreement between two or more persons to commit an illegal act or a legal act by illegal means."},{question:"What is the new name for the Indian Penal Code (IPC) under the new legislation?",options:["Bhartiya Nagarik Suraksha Sanhita","Bhartiya Nyaya Sanhita","Bhartiya Sakshya Adhiniyam","Bhartiya Dand Sanhita"],answer:1,level:"Intermediate",explanation:"The Indian Penal Code (IPC) has been replaced by the Bhartiya Nyaya Sanhita (BNS) as part of the new criminal laws passed by the Indian Parliament in 2023."},{question:"Under the BNS, what is the new provision for sedition?",options:["It has been completely repealed","It is retained with a new name as 'offence against the state'","It is now part of the Unlawful Activities (Prevention) Act","It is merged with offenses of rioting"],answer:1,level:"Intermediate",explanation:"Sedition has been repealed and replaced with a new provision under Section 152 of the Bhartiya Nyaya Sanhita (BNS), which addresses offenses against the state, including acts that endanger India's sovereignty, unity, and integrity."},{question:"Which of these is a recognized 'General Exception' from criminal liability under the IPC?",options:["Intoxication (self-induced)","Insanity","Mistake of Law","Sudden and grave provocation"],answer:1,level:"Intermediate",explanation:"Insanity, a mental condition that prevents an accused from knowing the nature of their act, is a general exception under Section 84 of the IPC. The others are not general exceptions in the same way."},{question:"What is the legal term for a written order issued by a court, typically to compel a person to appear in court?",options:["Habeas Corpus","Writ","Subpoena","Summons"],answer:2,level:"Intermediate",explanation:"A subpoena is a legal document ordering a person to attend court or to produce documents."},{question:"Which Article of the Constitution deals with the 'Right to Education'?",options:["Article 19","Article 21A","Article 32","Article 48"],answer:1,level:"Intermediate",explanation:"Article 21A, inserted by the 86th Amendment Act of 2002, makes the right to free and compulsory education for children between the ages of 6 and 14 a Fundamental Right."},{question:"The doctrine of 'Basic Structure' of the Constitution was propounded in which landmark case?",options:["A. K. Gopalan v. State of Madras","Kesavananda Bharati v. State of Kerala","Minerva Mills v. Union of India","S.R. Bommai v. Union of India"],answer:1,level:"Advanced",explanation:"The Supreme Court of India in the Kesavananda Bharati case (1973) held that the Parliament can amend the Constitution, but cannot alter its 'basic structure'."},{question:"In the 'Indra Sawhney v. Union of India' case, what was the Supreme Court's verdict on reservations?",options:["It abolished all reservations","It upheld the 27% reservation for OBCs but capped total reservation at 50%","It mandated reservations in all government jobs","It declared reservations unconstitutional"],answer:1,level:"Advanced",explanation:"This landmark 1992 case, also known as the 'Mandal Commission case', upheld the reservation for OBCs but imposed a 50% ceiling on total reservations for all categories."},{question:"Which case is known for establishing the right to life with human dignity under Article 21?",options:["Menaka Gandhi v. Union of India","ADM Jabalpur v. Shivkant Shukla","K.S. Puttaswamy v. Union of India","Vishakha v. State of Rajasthan"],answer:0,level:"Advanced",explanation:"The Menaka Gandhi case (1978) significantly expanded the scope of Article 21, interpreting the 'right to life' to include the right to live with human dignity and personal liberty."},{question:"What legal principle was established in the 'S.R. Bommai v. Union of India' case (1994)?",options:["Right to Privacy","Judicial Review of Proclamation of President's Rule","Separation of Powers","Environmental Justice"],answer:1,level:"Advanced",explanation:"This case established that the power of the President to dismiss a State Government under Article 356 is not absolute and is subject to judicial review by the Supreme Court."},{question:"The 'P.A. Inamdar v. State of Maharashtra' case relates to what legal issue?",options:["Reservation in promotions","Right to education","Reservation in private unaided educational institutions","Right to form cooperative societies"],answer:2,level:"Advanced",explanation:"The case in 2005 dealt with the legality of reservations in unaided private educational institutions, holding that the state cannot impose its reservation policy on them."},{question:"The principle of 'Separation of Powers' is enshrined in which part of the Indian Constitution?",options:["Preamble","Fundamental Rights","Directive Principles of State Policy","It is not explicitly mentioned but implied"],answer:3,level:"Advanced",explanation:"While not explicitly stated, the separation of powers is implied in the structure of the Constitution, which establishes three distinct branches: the legislature, executive, and judiciary."},{question:"Which case led to the recognition of the 'Right to Privacy' as a Fundamental Right in India?",options:["Golaknath v. State of Punjab","Kesavananda Bharati v. State of Kerala","K.S. Puttaswamy v. Union of India","Sajjan Singh v. State of Rajasthan"],answer:2,level:"Advanced",explanation:"The Supreme Court's verdict in K.S. Puttaswamy v. Union of India (2017) declared that the Right to Privacy is a fundamental right under Article 21 of the Constitution."}];
+            
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const endScreen = document.getElementById('end-screen');
+            const leaderboardScreen = document.getElementById('leaderboard-screen');
+            const startBtn = document.getElementById('start-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const leaderboardBtnStart = document.getElementById('leaderboard-btn-start');
+            const leaderboardBtnEnd = document.getElementById('leaderboard-btn-end');
+            const backToStartBtn = document.getElementById('back-to-start-btn');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const scoreDisplay = document.getElementById('score-display');
+            const levelDisplay = document.getElementById('level-display');
+            const questionCount = document.getElementById('question-count');
+            const finalScoreText = document.getElementById('final-score-text');
+            const finalScoreDisplay = document.getElementById('final-score-display');
+            const explanationBox = document.getElementById('explanation-box');
+            const explanationText = document.getElementById('explanation-text');
+            const progressBar = document.getElementById('progress-bar');
+            const saveScoreForm = document.getElementById('save-score-form');
+            const playerNameInput = document.getElementById('player-name');
+            const endScreenNav = document.getElementById('end-screen-nav');
+            const leaderboardList = document.getElementById('leaderboard-list');
+
+            let questions = [];
+            let currentQuestionIndex = 0;
+            let score = 0;
+            const totalQuestionsForQuiz = 15;
+            const LEADERBOARD_KEY = 'lawQuizLeaderboard';
+
+            function showQuizScreen(screen) {
+                startScreen.classList.add('hidden');
+                quizScreen.classList.add('hidden');
+                endScreen.classList.add('hidden');
+                leaderboardScreen.classList.add('hidden');
+                screen.classList.remove('hidden');
+            }
+            
+            function startGame() {
+                const shuffledAllQuestions = shuffleArray(allQuestions);
+                questions = shuffledAllQuestions.slice(0, totalQuestionsForQuiz);
+                currentQuestionIndex = 0;
+                score = 0;
+                scoreDisplay.textContent = `Score: ${score}`;
+                explanationBox.classList.add('hidden');
+                showQuizScreen(quizScreen);
+                showQuestion();
+            }
+
+            function showQuestion() {
+                const currentQuestion = questions[currentQuestionIndex];
+                questionText.textContent = currentQuestion.question;
+                levelDisplay.textContent = `Level: ${currentQuestion.level}`;
+                questionCount.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+                const progressPercentage = ((currentQuestionIndex) / questions.length) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                optionsContainer.innerHTML = '';
+                currentQuestion.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.className = 'option-button text-slate-700 py-3 px-4 rounded-xl font-semibold text-left';
+                    button.addEventListener('click', () => checkAnswer(index));
+                    optionsContainer.appendChild(button);
+                });
+                explanationBox.classList.add('hidden');
+            }
+
+            function checkAnswer(selectedIndex) {
+                const currentQuestion = questions[currentQuestionIndex];
+                const optionButtons = optionsContainer.querySelectorAll('.option-button');
+                const correctIndex = currentQuestion.answer;
+                optionButtons.forEach(btn => btn.classList.add('disabled'));
+                if (selectedIndex === correctIndex) {
+                    score++;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                    optionButtons[selectedIndex].classList.add('correct');
+                } else {
+                    optionButtons[selectedIndex].classList.add('incorrect');
+                    optionButtons[correctIndex].classList.add('correct');
+                }
+                explanationText.textContent = currentQuestion.explanation;
+                explanationBox.classList.remove('hidden');
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        showQuestion();
+                    } else {
+                        endGame();
+                    }
+                }, 3000);
+            }
+
+            function endGame() {
+                showQuizScreen(endScreen);
+                progressBar.style.width = '100%';
+                finalScoreDisplay.textContent = `You scored ${score} out of ${questions.length}!`;
+                saveScoreForm.classList.remove('hidden');
+                endScreenNav.classList.add('hidden');
+                if (score === questions.length) {
+                    finalScoreText.textContent = "Congratulations! You're a Legal Genius!";
+                } else if (score >= questions.length / 2) {
+                    finalScoreText.textContent = "Great Job! You're on your way to becoming a legal scholar!";
+                } else {
+                    finalScoreText.textContent = "Nice Try! Keep Studying!";
+                }
+            }
+            
+            function shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+
+            function getLeaderboard() {
+                return JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]');
+            }
+
+            function saveScore(event) {
+                event.preventDefault();
+                const playerName = playerNameInput.value.trim();
+                if (!playerName) return;
+                const leaderboard = getLeaderboard();
+                leaderboard.push({ name: playerName, score: score });
+                leaderboard.sort((a, b) => b.score - a.score);
+                localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard.slice(0, 10)));
+                saveScoreForm.classList.add('hidden');
+                endScreenNav.classList.remove('hidden');
+                playerNameInput.value = '';
+            }
+
+            function displayLeaderboard() {
+                const leaderboard = getLeaderboard();
+                leaderboardList.innerHTML = leaderboard.length === 0 ? '<li class="text-center text-slate-500">No scores yet. Be the first!</li>' : leaderboard.map(entry => `<li class="flex justify-between items-center"><span class="font-semibold text-indigo-700">${entry.name}</span><span class="text-slate-600 font-bold">${entry.score} / ${totalQuestionsForQuiz}</span></div>`).join('');
+                showQuizScreen(leaderboardScreen);
+            }
+
+            // Publicly expose a reset function
+            window.resetQuiz = () => {
+                showQuizScreen(startScreen);
+            };
+
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', startGame);
+            saveScoreForm.addEventListener('submit', saveScore);
+            leaderboardBtnStart.addEventListener('click', displayLeaderboard);
+            leaderboardBtnEnd.addEventListener('click', displayLeaderboard);
+            backToStartBtn.addEventListener('click', () => showQuizScreen(startScreen));
+        })();
+
+    </script>
+
+</body>
+</html>
+

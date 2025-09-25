@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Law Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light Gray Background */
+        }
+        .chat-container {
+            /* Custom scrollbar for better aesthetics */
+            scrollbar-width: thin;
+            scrollbar-color: #a5b4fc #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 20px; /* Add padding to make space for the scrollbar */
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #a5b4fc;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+        }
+        .message {
+            max-width: 75%;
+            padding: 0.75rem 1.25rem;
+            border-radius: 1.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .user-message {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            border-bottom-right-radius: 0.5rem;
+        }
+        .bot-message {
+            background-color: #e5e7eb; /* Light Gray */
+            color: #1f2937; /* Darker Text */
+            border-bottom-left-radius: 0.5rem;
+        }
+        .loading-dots span {
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        .suggestion-chip {
+            transition: all 0.2s ease-in-out;
+        }
+        .suggestion-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        /* Modal styles */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.hidden .modal-content {
+            transform: scale(0.95);
+        }
+        /* Style for when mic is active */
+        .mic-active {
+            background-color: #f87171; /* A light red */
+            color: white;
+            animation: pulse-bg 1.5s infinite;
+        }
+        @keyframes pulse-bg {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Chat Interface -->
+    <div class="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl flex flex-col h-[95vh] max-h-[800px]">
+        
+        <!-- Header -->
+        <div class="p-5 border-b border-gray-200 flex items-center justify-between">
+            <div class="flex items-center">
+                 <div class="p-2 bg-indigo-100 rounded-full mr-4">
+                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                 </div>
+                 <div>
+                    <h1 class="text-xl font-bold text-gray-800">Legal Compass</h1>
+                    <p class="text-sm text-gray-500">Your AI Legal Assistant</p>
+                 </div>
+            </div>
+            <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse" title="Online"></div>
+        </div>
+
+        <!-- Chat Container -->
+        <div id="chatContainer" class="flex-grow p-6 overflow-y-auto chat-container">
+            <!-- Messages will be injected here -->
+        </div>
+
+        <!-- Input Section -->
+        <div class="p-5 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+            <!-- Suggestion Chips -->
+            <div class="flex items-center justify-start space-x-2 mb-3">
+                <button id="draftLetterButton" class="suggestion-chip bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-300">
+                    ✉️ Draft a Formal Letter
+                </button>
+                 <button id="explainTermButton" class="suggestion-chip bg-gray-200 text-gray-700 text-sm font-medium px-4 py-2 rounded-full hover:bg-gray-300">
+                    ⚖️ Explain a Legal Term
+                </button>
+            </div>
+            <div class="flex w-full items-center space-x-3">
+                <input id="userInput" type="text" class="flex-grow p-3 px-5 rounded-full border-2 border-transparent bg-gray-100 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-300" placeholder="Ask about your rights, contracts, and more...">
+                <button id="micButton" class="p-3 bg-gray-200 text-gray-600 rounded-full hover:bg-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-300 transition-transform duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                </button>
+                <button id="sendButton" class="p-3 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-transform duration-200 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for Drafting Letter -->
+    <div id="draftLetterModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+        <div class="modal-content bg-white rounded-lg shadow-xl w-full max-w-lg p-6 transform">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Draft a Formal Letter</h2>
+            <p class="text-gray-600 mb-6">Please describe the situation for the letter. Be as specific as possible (e.g., "My landlord is not returning my security deposit of ₹5000 despite me vacating the property a month ago.").</p>
+            <form id="draftLetterForm">
+                <textarea id="situationInput" rows="5" class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400" placeholder="Describe the situation here..."></textarea>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="closeModalButton" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">✨ Draft Letter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        window.onload = () => {
+            // UI Elements
+            const chatContainer = document.getElementById('chatContainer');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendButton');
+            const draftLetterButton = document.getElementById('draftLetterButton');
+            const explainTermButton = document.getElementById('explainTermButton');
+            const micButton = document.getElementById('micButton');
+
+            // Modal Elements
+            const draftLetterModal = document.getElementById('draftLetterModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const draftLetterForm = document.getElementById('draftLetterForm');
+            const situationInput = document.getElementById('situationInput');
+
+            // --- UI Functions ---
+            function addMessageToUI(message, type, avatarIcon) {
+                const messageWrapper = document.createElement('div');
+                messageWrapper.className = `w-full flex ${type === 'bot' ? 'justify-start' : 'justify-end'}`;
+                
+                const avatar = `<div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${type === 'bot' ? 'bg-gray-400 mr-3' : 'bg-indigo-500 ml-3 order-2'}">${avatarIcon}</div>`;
+                const messageBubble = `<div class="message ${type}-message">${message}</div>`;
+                
+                messageWrapper.innerHTML = type === 'bot' ? avatar + messageBubble : messageBubble + avatar;
+                chatContainer.appendChild(messageWrapper);
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
+            }
+
+            function disableUI(disabled) {
+                sendButton.disabled = disabled;
+                draftLetterButton.disabled = disabled;
+                explainTermButton.disabled = disabled;
+                userInput.disabled = disabled;
+                micButton.disabled = disabled;
+            }
+
+            disableUI(false); // Enable the UI as there's no auth dependency
+
+            // --- Local Storage Functions ---
+            function saveMessage(message, sender) {
+                const messages = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                messages.push({ message, sender });
+                localStorage.setItem('chatHistory', JSON.stringify(messages));
+            }
+
+            function loadMessages() {
+                const messages = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                messages.forEach(msg => addMessageToUI(msg.message, msg.sender, msg.sender === 'bot' ? 'AI' : 'U'));
+            }
+
+            // --- Thinking Feature ---
+            let thinkingInterval = null;
+            const queryThinkingSteps = [
+                "Analyzing your query...",
+                "Consulting Indian legal frameworks...",
+                "Cross-referencing relevant codes (IPC, BNS)...",
+                "Formulating your advice..."
+            ];
+            const letterThinkingSteps = [
+                "Understanding the situation...",
+                "Structuring the formal letter...",
+                "Ensuring a firm but polite tone...",
+                "Finalizing the draft..."
+            ];
+
+            function startThinkingProcess(steps) {
+                const thinkingElement = document.createElement('div');
+                thinkingElement.id = 'thinkingIndicator';
+                thinkingElement.className = 'w-full flex justify-start';
+                thinkingElement.innerHTML = `
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center bg-gray-400 mr-3 text-white text-sm font-bold">AI</div>
+                    <div class="bot-message flex items-center space-x-3 p-3">
+                        <div class="loading-dots">
+                            <span class="w-2 h-2 bg-gray-600 rounded-full inline-block" style="animation-delay: 0s;"></span>
+                            <span class="w-2 h-2 bg-gray-600 rounded-full inline-block" style="animation-delay: 0.1s;"></span>
+                            <span class="w-2 h-2 bg-gray-600 rounded-full inline-block" style="animation-delay: 0.2s;"></span>
+                        </div>
+                        <span id="thinkingText" class="text-sm transition-opacity duration-500"></span>
+                    </div>
+                `;
+                chatContainer.appendChild(thinkingElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                const thinkingTextElement = document.getElementById('thinkingText');
+                let step = 0;
+
+                const updateText = () => {
+                    if(!thinkingTextElement) return;
+                    thinkingTextElement.style.opacity = '0';
+                    setTimeout(() => {
+                        thinkingTextElement.textContent = steps[step % steps.length];
+                        thinkingTextElement.style.opacity = '1';
+                        step++;
+                    }, 500); // Wait for fade out before changing text
+                };
+                
+                updateText(); // Initial text
+                thinkingInterval = setInterval(updateText, 2000); // Change text every 2 seconds
+            }
+
+            function stopThinkingProcess() {
+                if (thinkingInterval) {
+                    clearInterval(thinkingInterval);
+                    thinkingInterval = null;
+                }
+                const thinkingElement = document.getElementById('thinkingIndicator');
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+            }
+
+
+            // --- Speech Recognition ---
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'en-IN';
+                recognition.interimResults = false;
+
+                micButton.addEventListener('click', () => {
+                    if(sendButton.disabled) return;
+                    recognition.start();
+                });
+
+                recognition.onstart = () => {
+                    micButton.classList.add('mic-active');
+                    userInput.placeholder = "Listening...";
+                    disableUI(true);
+                };
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[event.results.length - 1][0].transcript.trim();
+                    userInput.value = transcript;
+                    // Don't call handleSendMessage directly, as onend will enable UI
+                };
+
+                recognition.onerror = (event) => {
+                    console.error("Speech recognition error", event.error);
+                    userInput.placeholder = "Sorry, I couldn't hear you. Please try again.";
+                };
+
+                recognition.onend = () => {
+                    micButton.classList.remove('mic-active');
+                    userInput.placeholder = "Ask about your rights, contracts, and more...";
+                    disableUI(false);
+                    if (userInput.value.trim()) { // If there's a result, send it
+                        handleSendMessage();
+                    }
+                };
+            } else {
+                console.warn("Speech Recognition not supported in this browser.");
+                micButton.style.display = 'none';
+            }
+            
+            // --- Gemini API Call ---
+            async function callGeminiApi(userQuery, systemPrompt, responseSchema = null) {
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    generationConfig: {
+                        ...(responseSchema && { responseMimeType: "application/json", responseSchema }),
+                    },
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+                
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${"AIzaSyDpuAFbE36Q-nb6nhSSeEEuniJVpYsglIk"}`;
+
+                let response;
+                for (let i = 0; i < 3; i++) {
+                    try {
+                        response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.status !== 429) break;
+                        await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+                    } catch (error) {
+                        if (i === 2) throw error;
+                        await new Promise(res => setTimeout(res, Math.pow(2, i) * 1000));
+                    }
+                }
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API call failed: ${response.status} - ${errorData.error.message}`);
+                }
+                
+                const result = await response.json();
+                return result.candidates?.[0]?.content?.parts?.[0]?.text;
+            }
+
+            // --- Core Logic Handlers ---
+            async function handleSendMessage() {
+                const userMessage = userInput.value.trim();
+                if (userMessage === '') return;
+
+                userInput.value = '';
+                saveMessage(userMessage, 'user');
+                addMessageToUI(userMessage, 'user', 'U');
+                
+                startThinkingProcess(queryThinkingSteps);
+                disableUI(true);
+                
+                try {
+                    const schema = {
+                        type: "OBJECT",
+                        properties: {
+                            category: { type: "STRING", description: "The legal category of the problem, e.g., 'Criminal', 'Civil', or 'Family'." },
+                            rights: { type: "STRING", description: "A short explanation of the person's rights in this situation." },
+                            advice: { type: "STRING", description: "The main legal advice in a clear and human-friendly tone, referencing Indian laws like the Constitution, Bharatiya Nyaya Sanhita, or IPC where applicable." }
+                        },
+                        required: ["category", "rights", "advice"]
+                    };
+                    const systemPrompt = "You are a human-friendly and empathetic legal advisor specializing in Indian law (Constitution, BNS, IPC). Listen to the user's problem and provide advice in a clear, short, and polite tone. Categorize the problem, state their rights, and give advice. Respond only with a JSON object following the specified schema.";
+                    
+                    const botResponse = await callGeminiApi(userMessage, systemPrompt, schema);
+
+                    if (!botResponse) throw new Error("Empty response from API.");
+
+                    try {
+                        const { category, rights, advice } = JSON.parse(botResponse);
+                        const formattedResponse = `
+                            <p class="font-semibold text-indigo-700 mb-2">Category: ${category}</p>
+                            <p class="mb-2"><strong>Your Rights:</strong> ${rights}</p>
+                            <p><strong>Advice:</strong> ${advice}</p>
+                        `;
+                        saveMessage(formattedResponse, 'bot');
+                        addMessageToUI(formattedResponse, 'bot', 'AI');
+                    } catch (e) {
+                        console.error("Failed to parse JSON response:", e);
+                        const fallbackMessage = `I apologize, there was an issue processing the response. Raw data: ${botResponse}`;
+                        saveMessage(fallbackMessage, 'bot');
+                        addMessageToUI(fallbackMessage, 'bot', 'AI');
+                    }
+
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    const errorMessage = "I am unable to provide legal advice at this moment. Please try again later.";
+                    saveMessage(errorMessage, 'bot');
+                    addMessageToUI(errorMessage, 'bot', 'AI');
+                } finally {
+                    stopThinkingProcess();
+                    disableUI(false);
+                }
+            }
+            
+            async function handleDraftLetter(situation) {
+                startThinkingProcess(letterThinkingSteps);
+                disableUI(true);
+                saveMessage(`Drafting a formal letter for: "${situation}"`, 'user');
+                addMessageToUI(`Drafting a formal letter for: "${situation}"`, 'user', 'U');
+
+                try {
+                    const systemPrompt = "You are a legal assistant that drafts formal, professional letters in India based on user descriptions. The letter should be polite but firm, clearly stating the issue, relevant facts, and a requested course of action. Format it professionally with placeholders like [Your Name] and [Date]. Output only the letter content as plain text with proper line breaks.";
+                    const userQuery = `Draft a formal letter for this situation: ${situation}`;
+                    
+                    const botResponse = await callGeminiApi(userQuery, systemPrompt);
+
+                    if (botResponse) {
+                        const formattedLetter = `<pre class="whitespace-pre-wrap font-sans">${botResponse}</pre>`;
+                        saveMessage(formattedLetter, 'bot');
+                        addMessageToUI(formattedLetter, 'bot', 'AI');
+                    } else {
+                        throw new Error("Empty response from API.");
+                    }
+                } catch (error) {
+                    console.error("Letter drafting API call failed:", error);
+                    const errorMessage = "I am unable to draft a letter at this time. Please try again later.";
+                    saveMessage(errorMessage, 'bot');
+                    addMessageToUI(errorMessage, 'bot', 'AI');
+                } finally {
+                    stopThinkingProcess();
+                    disableUI(false);
+                }
+            }
+            
+            // --- Event Listeners ---
+            sendButton.addEventListener('click', handleSendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !sendButton.disabled) handleSendMessage();
+            });
+            
+            // Suggestion chip listener
+            explainTermButton.addEventListener('click', () => {
+                userInput.value = "Explain the term 'Habeas Corpus' in simple terms.";
+                userInput.focus();
+            });
+
+            // Modal event listeners
+            draftLetterButton.addEventListener('click', () => draftLetterModal.classList.remove('hidden'));
+            closeModalButton.addEventListener('click', () => draftLetterModal.classList.add('hidden'));
+            draftLetterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const situation = situationInput.value.trim();
+                if (situation) {
+                    handleDraftLetter(situation);
+                    situationInput.value = '';
+                    draftLetterModal.classList.add('hidden');
+                }
+            });
+
+            // Initial load of messages
+            loadMessages();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Law Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5l-.234-.234-.234.234L20 20.5z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-size: 20px 20px;
+        }
+        html { scroll-behavior: smooth; }
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+            border: none;
+        }
+        .card:hover { transform: translateY(-0.5rem); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(to right, #6366f1, #8b5cf6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(to right, #4f46e5, #7c3aed);
+            transform: scale(1.05);
+        }
+        .slider-container { position: relative; overflow: hidden; }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+        .slider-slide { flex-shrink: 0; width: 100%; }
+        .slider-nav button {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5); color: white; border: none;
+            padding: 0.75rem 1rem; cursor: pointer; z-index: 20;
+            transition: background-color 0.3s; border-radius: 9999px;
+        }
+        .slider-nav button:hover { background: rgba(0, 0, 0, 0.7); }
+        #prevBtn { left: 1rem; }
+        #nextBtn { right: 1rem; }
+        .slider-dots {
+            position: absolute; bottom: 1rem; left: 50%;
+            transform: translateX(-50%); display: flex;
+            gap: 0.5rem; z-index: 20;
+        }
+        .dot {
+            width: 10px; height: 10px; background: rgba(255, 255, 255, 0.5);
+            border-radius: 9999px; cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .dot.active { background: white; transform: scale(1.2); }
+        .page-section {
+            display: none;
+            position: relative;
+            padding-top: 5rem;
+            min-height: 80vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+    <!-- Main Application Content -->
+    <div id="app-content">
+        <!-- Header -->
+        <header id="header" class="fixed top-0 left-0 w-full z-50 bg-white/95 shadow-lg backdrop-blur-lg">
+            <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="text-2xl font-bold text-indigo-600 cursor-pointer" id="home-logo">NYAY4U</div>
+                
+                <div class="md:hidden">
+                    <button id="menu-toggle-btn" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+
+                <ul id="nav-menu" class="hidden md:flex md:items-center md:space-x-4 text-gray-600 font-medium absolute md:relative top-full left-0 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none p-4 md:p-0">
+                    <!-- User Dropdown -->
+                    <li class="relative">
+                        <button id="user-menu-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors w-full text-left md:w-auto md:text-center flex items-center space-x-2">
+                            <span>User</span>
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200">
+                           <!-- Logged Out State -->
+                           <div id="user-logged-out-view">
+                               <div class="p-2">
+                                   <button id="userLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Login</button>
+                                   <button id="userRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Register</button>
+                               </div>
+                           </div>
+                           <!-- Logged In State -->
+                           <div id="user-logged-in-view" class="hidden">
+                               <div class="flex items-center space-x-4 p-4 border-b border-gray-200">
+                                   <img id="userPic" class="w-12 h-12 rounded-full" alt="User Avatar"/>
+                                   <div>
+                                       <p id="userName" class="font-semibold text-gray-800"></p>
+                                       <p id="userEmail" class="text-xs text-gray-500"></p>
+                                   </div>
+                               </div>
+                               <div class="p-2">
+                                    <button id="userLogoutBtn" class="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md">Logout</button>
+                               </div>
+                           </div>
+                        </div>
+                    </li>
+                    <!-- Advocate Dropdown -->
+                    <li class="relative">
+                        <button id="advocate-menu-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-colors w-full text-left md:w-auto md:text-center flex items-center space-x-2">
+                            <span>Advocate</span>
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div id="advocate-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl z-50 overflow-hidden border border-gray-200">
+                           <!-- Logged Out State -->
+                           <div id="advocate-logged-out-view">
+                               <div class="p-2">
+                                   <button id="advocateLoginBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Login</button>
+                                   <button id="advocateRegisterBtn" class="text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Register</button>
+                               </div>
+                           </div>
+                           <!-- Logged In State -->
+                           <div id="advocate-logged-in-view" class="hidden">
+                               <div class="p-2">
+                                    <button data-target="advocate-register-section" class="page-button text-left w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">Advocate Register</button>
+                                    <button id="advocateLogoutBtn" class="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md">Logout</button>
+                               </div>
+                           </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="mainContent" class="container mx-auto px-4 pt-24">
+
+            <!-- Main Home Page Section -->
+            <div id="home-section">
+                <!-- Hero Section --> 
+                <section id="home" class="relative text-center text-white py-8 md:py-10 rounded-3xl overflow-hidden shadow-2xl bg-indigo-600 hero-pattern slider-container mt-8">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-700 to-purple-800 opacity-90"></div>
+                    <div class="slider-wrapper" id="sliderWrapper">
+                        <!-- Slide 1: LawBuddy -->
+                        <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
+                            <span class="text-5xl mb-2">🤖</span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">LawBuddy: Your AI Legal Assistant</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                                Get instant answers to your legal questions, understand your rights, and connect with lawyers.
+                            </p>
+                            <button data-target="chatbot-section" class="btn btn-primary page-button">Ask LawBuddy Now</button>
+                        </div>
+                        <!-- Slide 2: Get Advocate -->
+                        <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
+                             <span class="text-5xl mb-2">👩‍⚖️</span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">AI-Powered Advocate Matching</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                                Analyze your case with AI to get matched with the best legal advocate for your specific needs.
+                            </p>
+                            <button data-target="recommendation-section" class="btn btn-primary page-button">Find Your Advocate</button>
+                        </div>
+                        <!-- Slide 3: Constitution of India -->
+                        <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
+                            <span class="text-5xl mb-2">🏛️</span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">Explore the Constitution of India</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                               Dive into the articles, amendments, and fundamental principles of India's supreme law in an easy-to-understand format.
+                            </p>
+                            <button data-target="coi-section" class="btn btn-primary page-button">Start Exploring</button>
+                        </div>
+                        <!-- Slide 4: Indian Law Quiz -->
+                        <div class="slider-slide relative z-10 p-4 md:p-8 flex flex-col items-center justify-center">
+                             <span class="text-5xl mb-2">📝</span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold mb-2 drop-shadow-md">Test Your Legal Knowledge</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto opacity-90 leading-relaxed mb-6">
+                                Take our interactive quiz on Indian law and the constitution. Challenge yourself and see your score!
+                            </p>
+                            <button data-target="quiz-section" class="btn btn-primary page-button">Take the Quiz</button>
+                        </div>
+                    </div>
+                    <div class="slider-nav">
+                        <button id="prevBtn" aria-label="Previous Slide"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+                        <button id="nextBtn" aria-label="Next Slide"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 20 20" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+                    </div>
+                    <div class="slider-dots" id="sliderDots"></div>
+                </section>
+
+                <!-- Services Section -->
+                <section id="services" class="py-16">
+                    <h2 class="text-center text-3xl font-bold text-gray-800 mb-10">Our Services</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">🤖</span><h3 class="text-xl font-semibold text-indigo-600">LawBuddy</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">Your AI-powered legal assistant simplifies law for all. Ask questions, know your rights, explore solutions, and connect with lawyers — all in one place.</p>
+                            <a href="chatbot.html"><button data-target="chatbot-section" class="btn btn-primary w-full page-button">Get Consultation</button></a>
+                        </div>
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">⚖️</span><h3 class="text-xl font-semibold text-indigo-600">Get Advocate</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">Instant legal reports with automated analysis for fast, accurate documentation. AI suggests advocates based on your case.</p>
+                            <a href="recommendation.html"><button data-target="recommendation-section" class="btn btn-primary w-full page-button">Analyze Case</button></a>
+                        </div>
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">👩‍⚖️</span><h3 class="text-xl font-semibold text-indigo-600">Advocates</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">Browse verified advocates by specialization and easily connect for trusted legal advice, guidance, support, and representation services.</p>
+                            <a href="lawyer.html"><button data-target="advocates-section" class="btn btn-primary w-full page-button">View Lawyers</button></a>
+                        </div>
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">📖</span><h3 class="text-xl font-semibold text-indigo-600">ConstiLearn</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">An interactive platform to explore the Constitution of India through engaging quizzes and easy-to-understand learning modules.</p>
+                            <a href="legaleagle.html"><button data-target="quiz-section" class="btn btn-primary w-full page-button">Start Quiz</button></a>
+                        </div>
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">📈</span><h3 class="text-xl font-semibold text-indigo-600">Case Tracking System</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">Monitor the status and progress of your legal cases in real-time. Get automated updates and access all case-related documents in one secure place.</p>
+                            <a href="case.html"><button data-target="case-tracking-section" class="btn btn-primary w-full page-button">Track Your Case</button></a>
+                        </div>
+                        <div class="card">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <span class="text-4xl">🏛️</span><h3 class="text-xl font-semibold text-indigo-600">Uttarakhand Gov Portal</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">One-stop portal for Uttarakhand government services, legal resources, and public records—streamlining access to state legal systems.</p>
+                            <a href="ugp.html"><button data-target="uttarakhand-portal-section" class="btn btn-primary w-full page-button">Visit Portal</button></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features Section -->
+                <section id="features" class="py-16 bg-white rounded-3xl shadow-inner">
+                    <div class="container mx-auto px-4">
+                        <h2 class="text-center text-3xl font-bold text-gray-800 mb-12">Platform Features</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                            <!-- Feature 1: AI Legal Analysis -->
+                            <div class="text-center">
+                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800">AI Legal Analysis</h3>
+                                <p class="text-gray-600">Our advanced AI analyzes your case details to provide initial insights and recommend the most suitable legal experts.</p>
+                            </div>
+                            <!-- Feature 2: 24/7 LawBuddy Chat -->
+                            <div class="text-center">
+                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800">24/7 LawBuddy Chat</h3>
+                                <p class="text-gray-600">Get instant answers to your legal queries anytime with our intelligent chatbot, designed to simplify complex legal terms.</p>
+                            </div>
+                            <!-- Feature 3: Verified Advocates -->
+                            <div class="text-center">
+                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800">Verified Advocates</h3>
+                                <p class="text-gray-600">Connect with a network of experienced and verified legal professionals specializing in various fields of Indian law.</p>
+                            </div>
+                            <!-- Feature 4: Interactive Learning -->
+                            <div class="text-center">
+                                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <h3 class="text-xl font-semibold mb-2 text-gray-800">Interactive Learning</h3>
+                                <p class="text-gray-600">Test your knowledge with quizzes and explore the Constitution of India through our easy-to-navigate educational resources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Dynamic Page Sections -->
+            <section id="chatbot-section" class="page-section"></section>
+            <section id="recommendation-section" class="page-section"></section>
+            <section id="advocates-section" class="page-section"></section>
+            <section id="coi-section" class="page-section"></section>
+            <section id="quiz-section" class="page-section"></section>
+            <section id="case-tracking-section" class="page-section"></section>
+            <section id="uttarakhand-portal-section" class="page-section"></section>
+            <section id="advocate-register-section" class="page-section"></section>
+            <section id="terms-section" class="page-section"></section>
+            <section id="privacy-section" class="page-section"></section>
+        </main>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4 text-center text-sm text-gray-400">
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <span>&copy; 2025 AI Law Services. All rights reserved.</span>
+                    <div class="flex space-x-4">
+                       <button data-target="terms-section" class="public-page-button hover:text-white transition-colors">Terms & Conditions</button>
+                        <button data-target="privacy-section" class="public-page-button hover:text-white transition-colors">Privacy Policy</button>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-kpfuvLe2YvRMQ9M_ltyeBY_UCFJD3Fk",
+            authDomain: "learn2law-87a20.firebaseapp.com",
+            projectId: "learn2law-87a20",
+            storageBucket: "learn2law-87a20.appspot.com",
+            messagingSenderId: "524322238957",
+            appId: "1:524322238957:web:3b7aedbe4aa8d9533af7e4",
+            measurementId: "G-1HS4TMKLXD"
+        };
+
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // UI elements
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const navMenu = document.getElementById('nav-menu');
+        
+        // User Menu Elements
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+        const userLoggedOutView = document.getElementById('user-logged-out-view');
+        const userLoggedInView = document.getElementById('user-logged-in-view');
+        const userLoginBtn = document.getElementById('userLoginBtn');
+        const userRegisterBtn = document.getElementById('userRegisterBtn');
+        const userLogoutBtn = document.getElementById('userLogoutBtn');
+        const userPic = document.getElementById('userPic');
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+
+        // Advocate Menu Elements
+        const advocateMenuBtn = document.getElementById('advocate-menu-btn');
+        const advocateDropdown = document.getElementById('advocate-dropdown');
+        const advocateLoggedOutView = document.getElementById('advocate-logged-out-view');
+        const advocateLoggedInView = document.getElementById('advocate-logged-in-view');
+        const advocateLoginBtn = document.getElementById('advocateLoginBtn');
+        const advocateRegisterBtn = document.getElementById('advocateRegisterBtn');
+        const advocateLogoutBtn = document.getElementById('advocateLogoutBtn');
+
+        // --- Auth Logic ---
+        // onAuthStateChanged(auth, (user) => {
+        //     if (user) {
+        //         // User is signed in: Update both dropdowns
+        //         userLoggedOutView.classList.add('hidden');
+        //         userLoggedInView.classList.remove('hidden');
+        //         userPic.src = user.photoURL;
+        //         userName.textContent = user.displayName;
+        //         userEmail.textContent = user.email;
+
+        //         advocateLoggedOutView.classList.add('hidden');
+        //         advocateLoggedInView.classList.remove('hidden');
+        //     } else {
+        //         // User is signed out: Update both dropdowns
+        //         userLoggedInView.classList.add('hidden');
+        //         userLoggedOutView.classList.remove('hidden');
+
+        //         advocateLoggedInView.classList.add('hidden');
+        //         advocateLoggedOutView.classList.remove('hidden');
+        //     }
+        // });
+
+        // function handleSignIn() {
+        //     signInWithPopup(auth, provider).catch(error => console.error("Sign in error:", error));
+        //     userDropdown.classList.add('hidden');
+        //     advocateDropdown.classList.add('hidden');
+        // }
+
+        // function handleSignOut() {
+        //     signOut(auth).catch(error => console.error("Sign out error:", error));
+        //     userDropdown.classList.add('hidden');
+        //     advocateDropdown.classList.add('hidden');
+        // }
+
+        // userLoginBtn.addEventListener("click", handleSignIn);
+        // userRegisterBtn.addEventListener("click", handleSignIn);
+        // userLogoutBtn.addEventListener("click", handleSignOut);
+        
+        // advocateLoginBtn.addEventListener("click", handleSignIn);
+        // advocateRegisterBtn.addEventListener("click", handleSignIn);
+        // advocateLogoutBtn.addEventListener("click", handleSignOut);
+        
+        // --- Page Navigation ---
+        // async function loadContentForPage(pageName, sectionElement) {
+        //     // const contentPlaceholders = {
+        //     //     'chatbot-section': '<h2>LawBuddy Chatbot</h2><p>Chatbot interface will be loaded here...</p>',
+        //     //     'recommendation-section': '<h2>Advocate Recommendation</h2><p>Case analysis and advocate recommendations will appear here...</p>',
+        //     //     'coi-section': '<h2>Constitution of India</h2><p>Interactive articles and summaries of the Constitution will be loaded here...</p>',
+        //     //     'quiz-section': '<h2>Indian Law Quiz</h2><p>The quiz interface will be loaded here...</p>',
+        //     //     'advocate-register-section': '<h2>Advocate Registration</h2><p>The registration form for advocates will be loaded here...</p>',
+        //     //     'terms-section': '<h2>Terms & Conditions</h2><p>The Terms and Conditions for using this service will be loaded here...</p>',
+        //     //     'privacy-section': '<h2>Privacy Policy</h2><p>The Privacy Policy for this service will be loaded here...</p>',
+        //     //     'case-tracking-section': '<h2>Case Tracking System</h2><p>The case tracking interface will be loaded here...</p>',
+        //     //     'uttarakhand-portal-section': '<h2>Uttarakhand Government Portal</h2><p>The portal interface and resources will be loaded here...</p>'
+        //     // };
+
+        //     if (pageName === 'advocates-section') {
+        //         const lawyersData = {
+        //             "Criminal Law": [
+        //                 { name: "Rakesh Gupta", specialization: "Bail & Anticipatory Bail", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RG" },
+        //                 { name: "Priya Singh", specialization: "Cyber Crime", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PS" },
+        //                 { name: "Amit Deshpande", specialization: "Narcotics Cases", location: "Pune", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AD" },
+        //             ],
+        //             "Civil Law": [
+        //                 { name: "Anjali Sharma", specialization: "Property Disputes", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AS" },
+        //                 { name: "Rajesh Kumar", specialization: "Contract Law", location: "Chennai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RK" },
+        //                 { name: "Sunita Reddy", specialization: "Torts and Claims", location: "Hyderabad", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=SR" },
+        //             ],
+        //             "Corporate Law": [
+        //                 { name: "Vikram Mehta", specialization: "Mergers & Acquisitions", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=VM" },
+        //                 { name: "Neha Agarwal", specialization: "Intellectual Property", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=NA" },
+        //                 { name: "Karan Malhotra", specialization: "Startup Law", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=KM" },
+        //             ],
+        //             "Family Law": [
+        //                 { name: "Meera Desai", specialization: "Divorce & Alimony", location: "Pune", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=MD" },
+        //                 { name: "Sanjay Verma", specialization: "Child Custody", location: "Kolkata", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=SV" },
+        //                 { name: "Pooja Hegde", specialization: "Adoption Law", location: "Jaipur", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PH" },
+        //             ],
+        //             "Cyber Law": [
+        //                 { name: "Aarav Singh", specialization: "Data Privacy", location: "Hyderabad", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AS" },
+        //                 { name: "Ishita Roy", specialization: "Online Fraud", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=IR" },
+        //                 { name: "Nikhil Joshi", specialization: "E-commerce Disputes", location: "Noida", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=NJ" },
+        //             ],
+        //             "Tax Law": [
+        //                 { name: "Ravi Chandran", specialization: "GST & Indirect Tax", location: "Chennai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RC" },
+        //                 { name: "Preeti Khanna", specialization: "Income Tax Disputes", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PK" },
+        //                 { name: "Anand Pillai", specialization: "International Taxation", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AP" },
+        //             ]
+        //         };
+
+        //         let contentHTML = `<div class="container mx-auto px-4">
+        //             <h2 class="text-center text-4xl font-bold text-gray-800 mb-4">Meet Our Advocates</h2>
+        //             <p class="text-center text-lg text-gray-600 max-w-2xl mx-auto mb-12">Browse our network of verified legal professionals, categorized by their area of expertise.</p>`;
+
+        //         for (const category in lawyersData) {
+        //             contentHTML += `
+        //                 <div class="mb-12">
+        //                     <h3 class="text-2xl font-bold text-indigo-600 mb-6 border-l-4 border-indigo-500 pl-4">${category}</h3>
+        //                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        //             `;
+        //             lawyersData[category].forEach(lawyer => {
+        //                 contentHTML += `
+        //                     <div class="card text-center hover:shadow-2xl hover:border-indigo-500/50 border-2 border-transparent">
+        //                         <img class="w-24 h-24 mx-auto mb-4 rounded-full object-cover ring-4 ring-gray-200" src="${lawyer.img}" alt="${lawyer.name}">
+        //                         <h4 class="text-xl font-semibold text-gray-800">${lawyer.name}</h4>
+        //                         <p class="text-indigo-500 font-medium mb-2">${lawyer.specialization}</p>
+        //                         <p class="text-gray-500 mb-4 text-sm">${lawyer.location}</p>
+        //                         <button class="btn btn-primary w-full">View Profile</button>
+        //                     </div>
+        //                 `;
+        //             });
+        //             contentHTML += `</div></div>`;
+        //         }
+        //         contentHTML += `</div>`;
+        //         sectionElement.innerHTML = contentHTML;
+
+        //     } else {
+        //          sectionElement.innerHTML = contentPlaceholders[pageName] || '<p>Content could not be loaded.</p>';
+        //     }
+           
+        //     sectionElement.dataset.loaded = 'true';
+        // }
+
+        // async function renderPage(pageId) {
+        //     const targetPageId = pageId || 'home-section';
+        //     document.getElementById('home-section').style.display = 'none';
+        //     document.querySelectorAll('.page-section').forEach(section => {
+        //         section.style.display = 'none';
+        //     });
+        //     const sectionElement = document.getElementById(targetPageId);
+        //     if (sectionElement) {
+        //         if (targetPageId !== 'home-section' && !sectionElement.dataset.loaded) {
+        //             await loadContentForPage(targetPageId, sectionElement);
+        //         }
+        //         sectionElement.style.display = 'block';
+        //     } else {
+        //         document.getElementById('home-section').style.display = 'block';
+        //     }
+        //     window.scrollTo(0, 0);
+        // }
+
+        // function navigateTo(pageId) {
+        //     const targetPageId = pageId || 'home-section';
+        //     const currentState = history.state ? history.state.page : null;
+        //     if (currentState === targetPageId) return;
+
+        //     const newUrl = targetPageId === 'home-section' ? window.location.pathname + window.location.search : `#${targetPageId}`;
+        //     history.pushState({ page: targetPageId }, '', newUrl);
+        //     renderPage(targetPageId);
+        //     userDropdown.classList.add('hidden');
+        //     advocateDropdown.classList.add('hidden'); 
+        // }
+
+        // window.addEventListener('popstate', (event) => {
+        //     const pageId = (event.state && event.state.page) ? event.state.page : 'home-section';
+        //     renderPage(pageId);
+        // });
+        
+        // document.querySelectorAll('.page-button, .public-page-button').forEach(button => {
+        //     button.addEventListener('click', (e) => {
+        //         e.preventDefault();
+        //         const targetId = button.dataset.target;
+                
+        //         if(targetId === 'advocate-register-section' && !auth.currentUser) {
+        //             alert("Please sign in to register as an advocate.");
+        //             advocateDropdown.classList.remove('hidden');
+        //             return;
+        //         }
+        //         navigateTo(targetId);
+        //     });
+        // });
+
+        document.getElementById('home-logo').addEventListener('click', () => {
+            navigateTo('home-section');
+        });
+
+        // --- UI and Slider Logic ---
+        function adjustMainContentPadding() {
+            const headerHeight = document.getElementById('header')?.offsetHeight || 60;
+            document.getElementById('mainContent').style.paddingTop = headerHeight + 'px';
+        }
+        
+        const sliderWrapper = document.getElementById('sliderWrapper');
+        const slides = document.querySelectorAll('.slider-slide');
+        const dotsContainer = document.getElementById('sliderDots');
+        let currentIndex = 0;
+        let slideInterval;
+
+        if (slides.length > 0) {
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    stopAutoplay();
+                    currentIndex = i;
+                    updateSlider();
+                    startAutoplay();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateSlider() {
+            if (sliderWrapper) {
+                sliderWrapper.style.transform = `translateX(${-currentIndex * 100}%)`;
+                document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+            }
+        }
+
+        function nextSlide() { currentIndex = (currentIndex + 1) % (slides.length || 1); updateSlider(); }
+        function startAutoplay() { slideInterval = setInterval(nextSlide, 5000); }
+        function stopAutoplay() { clearInterval(slideInterval); }
+
+        document.getElementById('nextBtn')?.addEventListener('click', () => { stopAutoplay(); nextSlide(); startAutoplay(); });
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            stopAutoplay();
+            currentIndex = (currentIndex - 1 + (slides.length || 1)) % (slides.length || 1);
+            updateSlider();
+            startAutoplay();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => { 
+            adjustMainContentPadding();
+            window.addEventListener('resize', adjustMainContentPadding);
+            updateSlider(); 
+            startAutoplay();
+            
+            menuToggleBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('hidden');
+            });
+
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                advocateDropdown.classList.add('hidden');
+                userDropdown.classList.toggle('hidden');
+            });
+            
+            advocateMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.classList.add('hidden');
+                advocateDropdown.classList.toggle('hidden');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!advocateMenuBtn.contains(e.target) && !advocateDropdown.contains(e.target)) {
+                    advocateDropdown.classList.add('hidden');
+                }
+                if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+
+            const initialPage = window.location.hash ? window.location.hash.substring(1) : 'home-section';
+            history.replaceState({ page: initialPage }, '', window.location.href);
+            renderPage(initialPage);
+        });
+    </script>
+</body>
+</html>
+

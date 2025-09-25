@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Indian Constitution Simplified</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tricolor-gradient {
+            background: linear-gradient(90deg, #FF9933 33.3%, #FFFFFF 33.3%, #FFFFFF 66.6%, #138808 66.6%);
+        }
+        .ashoka-chakra {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #000080;
+            border-radius: 50%;
+            position: relative;
+        }
+        .ashoka-chakra::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: #000080;
+            transform: translate(-50%, -50%);
+        }
+        .ashoka-chakra::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #000080;
+            transform: translate(-50%, -50%);
+        }
+        /* More spokes for Ashoka Chakra */
+        .spoke {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 1px;
+            background: #000080;
+            transform-origin: center;
+        }
+        /* Styles for the content area to improve readability */
+        .content-prose h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .content-prose p {
+            line-height: 1.6;
+        }
+        .content-prose ul {
+            list-style-position: inside;
+        }
+        .nav-link-active {
+            background-color: #eff6ff; /* blue-50 */
+            color: #1d4ed8; /* blue-700 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                     <div class="w-10 h-10 flex items-center justify-center">
+                        <!-- Simplified representation of the Lion Capital of Ashoka -->
+                        <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1.052A11.001 11.001 0 001 12c0 2.236.668 4.33 1.857 6.096M23 12a11.001 11.001 0 00-10-10.948M12 22.948A11.001 11.001 0 0023 12c0-2.236-.668-4.33-1.857-6.096M2.857 6.096A10.966 10.966 0 0112 1.052m0 21.896c-2.83 0-5.46-.99-7.5-2.645m15 0c-2.04.655-4.67.655-6.71 0M12 1.052v2.99m0 15.908v2.99M5.044 18.044L7 16m10 2.044l-1.956-2.044M5.044 5.956L7 8m10-2.044l-1.956 2.044"></path></svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-800">The Indian Constitution: A Simple Guide</h1>
+                </div>
+                 <div class="flex items-center">
+                    <!-- Ashoka Chakra -->
+                    <div class="ashoka-chakra mr-2">
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(0deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(15deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(30deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(45deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(60deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(75deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(90deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(105deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(120deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(135deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(150deg);"></div>
+                        <div class="spoke" style="transform: translate(-50%, -50%) rotate(165deg);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="h-1 tricolor-gradient"></div>
+    </header>
+
+    <!-- Main Body Layout -->
+    <div class="container mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-extrabold text-gray-900">Understanding Our Constitution</h2>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Select a topic from the menu to learn more about the key components of the Constitution of India.</p>
+        </div>
+        
+        <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+            <!-- Sidebar Navigation -->
+            <aside class="md:w-1/4 lg:w-1/5">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Categories</h3>
+                <nav id="constitution-nav" class="space-y-1">
+                    <!-- Nav links will be injected here by JavaScript -->
+                </nav>
+            </aside>
+    
+            <!-- Main Content Display -->
+            <main id="constitution-content" class="flex-1 bg-white rounded-xl shadow-lg p-8 min-h-[500px]">
+                <!-- Content will be injected here by JavaScript -->
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2024 A Simplified Guide. For educational purposes only.</p>
+            <p class="text-sm text-gray-400 mt-2">Bharat Ganarajya Samvidhan</p>
+        </div>
+    </footer>
+
+    <script>
+        const categories = [
+            {
+                title: "Preamble",
+                icon: "📜",
+                description: "The introduction and soul of the Constitution. It outlines the philosophy and objectives.",
+                details: `
+                    <p><strong>"WE, THE PEOPLE OF INDIA,</strong> having solemnly resolved to constitute India into a <strong>SOVEREIGN SOCIALIST SECULAR DEMOCRATIC REPUBLIC</strong> and to secure to all its citizens:</p>
+                    <ul class="list-disc list-inside mt-2 space-y-1">
+                        <li><strong>JUSTICE</strong>, social, economic and political;</li>
+                        <li><strong>LIBERTY</strong> of thought, expression, belief, faith and worship;</li>
+                        <li><strong>EQUALITY</strong> of status and of opportunity;</li>
+                        <li>and to promote among them all <strong>FRATERNITY</strong> assuring the dignity of the individual and the unity and integrity of the Nation;</li>
+                    </ul>
+                    <p class="mt-2"><strong>IN OUR CONSTITUENT ASSEMBLY</strong> this twenty-sixth day of November, 1949, do <strong>HEREBY ADOPT, ENACT AND GIVE TO OURSELVES THIS CONSTITUTION."</strong></p>
+                `
+            },
+            {
+                title: "Nature of the Constitution",
+                icon: "🏗️",
+                description: "Understanding the core characteristics and structure of India's governing document.",
+                details: `
+                    <h4>Core Characteristics:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Lengthiest Written Constitution:</strong> It is the most detailed constitution in the world, comprehensively laying out the framework for governance.</li>
+                        <li><strong>Drawn From Various Sources:</strong> It incorporates features from the constitutions of many countries, including the UK, USA, Ireland, and Canada, adapting them to India's needs.</li>
+                        <li><strong>Blend of Rigidity and Flexibility (Article 368):</strong> The process of amendment is neither too easy nor too difficult, striking a balance between stability and adaptability.</li>
+                        <li><strong>Federal System with Unitary Bias:</strong> It establishes a dual polity with a division of powers between the Centre and States, but the Centre holds more power, especially during emergencies.</li>
+                        <li><strong>Parliamentary Form of Government (Article 74 & 75):</strong> The executive is responsible to the legislature (Parliament), following the British model.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Fundamental Rights (Part III)",
+                icon: "🛡️",
+                description: "Basic human rights guaranteed to every citizen to ensure their development and well-being.",
+                details: `
+                    <p>These rights are covered under <strong>Articles 12 to 35</strong> of the Constitution.</p>
+                    <h4>Key Rights Include:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Right to Equality (Articles 14-18):</strong> Ensures equality before the law (Art. 14) and prohibits discrimination on grounds of religion, race, caste, sex or place of birth (Art. 15).</li>
+                        <li><strong>Right to Freedom (Articles 19-22):</strong> Includes freedom of speech and expression (Art. 19), protection in respect of conviction for offences (Art. 20), and protection of life and personal liberty (Art. 21).</li>
+                        <li><strong>Right against Exploitation (Articles 23-24):</strong> Prohibits human trafficking and forced labor (Art. 23) and employment of children in factories (Art. 24).</li>
+                        <li><strong>Right to Freedom of Religion (Articles 25-28):</strong> Guarantees freedom of conscience and the right to freely profess, practice, and propagate religion (Art. 25).</li>
+                        <li><strong>Cultural and Educational Rights (Articles 29-30):</strong> Protects the interests of minorities to conserve their culture and establish educational institutions.</li>
+                        <li><strong>Right to Constitutional Remedies (Article 32):</strong> The 'heart and soul' of the Constitution. It allows citizens to move the Supreme Court to enforce their rights.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Citizenship (Part II)",
+                icon: "🇮🇳",
+                description: "Defines who is considered a citizen of India and the laws governing it.",
+                details: `
+                    <p>Part II of the Constitution (<strong>Articles 5-11</strong>) deals with Citizenship. It establishes who was a citizen of India at the time of the Constitution's commencement on January 26, 1950.</p>
+                    <h4>Key Articles:</h4>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Article 5:</strong> Citizenship at the commencement of the Constitution for people domiciled in India.</li>
+                        <li><strong>Article 9:</strong> A person who voluntarily acquires citizenship of a foreign state is no longer an Indian citizen.</li>
+                        <li><strong>Article 11:</strong> Empowers the Parliament to make any provision with respect to the acquisition and termination of citizenship. Based on this, Parliament enacted the Citizenship Act, 1955.</li>
+                        <li>Unlike the USA, India has a single citizenship, meaning all citizens owe allegiance only to the Union.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Directive Principles (Part IV)",
+                icon: "🧭",
+                description: "Guidelines for the central and state governments to frame laws and policies.",
+                details: `
+                    <p>These principles, covered under <strong>Articles 36 to 51</strong>, are not enforceable by courts but are fundamental in the governance of the country. They aim to establish a social and economic democracy.</p>
+                     <h4>Examples:</h4>
+                     <ul class="list-disc list-inside space-y-2">
+                        <li><strong>Article 39A:</strong> To provide free legal aid to the poor.</li>
+                        <li><strong>Article 40:</strong> To organize village panchayats as units of self-government.</li>
+                        <li><strong>Article 44:</strong> To secure for the citizens a Uniform Civil Code throughout the territory of India.</li>
+                        <li><strong>Article 45:</strong> To provide early childhood care and education for all children until they complete the age of six years.</li>
+                        <li><strong>Article 51:</strong> To promote international peace and security.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Fundamental Duties (Part IV-A)",
+                icon: "🤝",
+                description: "Moral obligations of all citizens to help promote a spirit of patriotism and uphold the unity of India.",
+                details: `
+                    <p>Added by the 42nd Amendment in 1976, these duties (under <strong>Article 51-A</strong>) remind citizens that they have responsibilities towards the nation.</p>
+                     <h4>Key Duties Include:</h4>
+                     <ul class="list-disc list-inside space-y-2">
+                        <li>(a) To abide by the Constitution and respect its ideals and institutions, the National Flag and the National Anthem.</li>
+                        <li>(e) To promote harmony and the spirit of common brotherhood amongst all the people of India.</li>
+                        <li>(g) To protect and improve the natural environment including forests, lakes, rivers and wild life.</li>
+                        <li>(h) To develop the scientific temper, humanism and the spirit of inquiry and reform.</li>
+                        <li>(i) To safeguard public property and to abjure violence.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "The Union Government (Part V)",
+                icon: "🏛️",
+                description: "Structure and functions of the central government, including the President, Parliament, and Supreme Court.",
+                details: `
+                    <p>This part covers <strong>Articles 52 to 151</strong>.</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li><strong>The President (Article 52):</strong> There shall be a President of India, who is the executive head of the state.</li>
+                        <li><strong>Council of Ministers (Articles 74 & 75):</strong> Headed by the Prime Minister to aid and advise the President.</li>
+                        <li><strong>Attorney-General for India (Article 76):</strong> The highest law officer in the country.</li>
+                        <li><strong>Parliament (Article 79):</strong> Consists of the President, Lok Sabha (House of the People), and Rajya Sabha (Council of States).</li>
+                        <li><strong>The Supreme Court (Article 124):</strong> Establishes the Supreme Court of India.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "The State Governments (Part VI)",
+                icon: "🏢",
+                description: "Structure and functions of the state governments, including the Governor, and State Legislature.",
+                details: `
+                    <p>This part covers <strong>Articles 152 to 237</strong>.</p>
+                     <ul class="list-disc list-inside space-y-2">
+                        <li><strong>The Governor (Article 153):</strong> There shall be a Governor for each state, who is the executive head.</li>
+                        <li><strong>Council of Ministers (Articles 163 & 164):</strong> Headed by the Chief Minister to aid and advise the Governor.</li>
+                        <li><strong>State Legislature (Article 168):</strong> Can be bicameral (Legislative Council and Legislative Assembly) or unicameral (only Legislative Assembly).</li>
+                        <li><strong>High Courts (Article 214):</strong> There shall be a High Court for each state.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "The Judiciary (Parts V & VI)",
+                icon: "⚖️",
+                description: "The system of courts that interprets and applies the law. It's an independent body.",
+                details: `
+                     <p>The Indian judiciary is an integrated system of courts, with the Supreme Court at the top.</p>
+                     <ul class="list-disc list-inside space-y-2 mt-2">
+                        <li><strong>Supreme Court (Article 124):</strong> The apex court, located in New Delhi. Its decisions are binding on all other courts. It has original, appellate and advisory jurisdictions (Art. 131, 133, 143).</li>
+                        <li><strong>High Courts (Article 214):</strong> Each state or group of states has a High Court. They have the power to issue writs (Art. 226).</li>
+                        <li><strong>Subordinate Courts (Article 233-237):</strong> District courts and other lower courts that function under the supervision of the High Courts.</li>
+                        <li><strong>Independence of Judiciary:</strong> The Constitution has various provisions, like security of tenure and fixed service conditions for judges, to ensure the judiciary remains independent from the influence of the executive and legislative branches.</li>
+                    </ul>
+                `
+            },
+             {
+                title: "Emergency Provisions (Part XVIII)",
+                icon: "🚨",
+                description: "Allows the central government to take on special powers to handle extraordinary situations.",
+                details: `
+                     <p>These provisions (<strong>Articles 352-360</strong>) are designed to protect the sovereignty, unity, integrity, and security of the country.</p>
+                     <ul class="list-disc list-inside space-y-2 mt-2">
+                        <li><strong>National Emergency (Article 352):</strong> Proclaimed on the grounds of war, external aggression or armed rebellion.</li>
+                        <li><strong>State Emergency / President's Rule (Article 356):</strong> Imposed when the constitutional machinery in a state fails.</li>
+                        <li><strong>Financial Emergency (Article 360):</strong> Proclaimed when the financial stability or credit of India is threatened.</li>
+                    </ul>
+                `
+            },
+            {
+                title: "Key Amendments",
+                icon: "✏️",
+                description: "Important changes made to the Constitution over time to adapt to new challenges.",
+                details: `
+                    <p>The Constitution can be amended under <strong>Article 368</strong> to adjust to the changing needs of society. Over 100 amendments have been made so far.</p>
+                     <h4>Notable Amendments:</h4>
+                     <ul class="list-disc list-inside space-y-2">
+                        <li><strong>1st Amendment (1951):</strong> Added the Ninth Schedule to protect land reform laws from judicial review.</li>
+                        <li><strong>42nd Amendment (1976):</strong> Known as the 'Mini-Constitution', it made widespread changes, adding 'Socialist' and 'Secular' to the Preamble and introducing Fundamental Duties.</li>
+                        <li><strong>44th Amendment (1978):</strong> Reversed many provisions of the 42nd Amendment and removed the Right to Property from Fundamental Rights, making it a legal right under Article 300-A.</li>
+                        <li><strong>61st Amendment (1989):</strong> Reduced the voting age from 21 to 18 years.</li>
+                        <li><strong>73rd & 74th Amendments (1992):</strong> Granted constitutional status to Panchayati Raj (rural local government) and Municipalities (urban local government).</li>
+                        <li><strong>86th Amendment (2002):</strong> Made free and compulsory education a Fundamental Right for children aged 6 to 14 under Article 21-A.</li>
+                         <li><strong>101st Amendment (2016):</strong> Introduced the Goods and Services Tax (GST).</li>
+                    </ul>
+                `
+            }
+        ];
+
+        const navContainer = document.getElementById('constitution-nav');
+        const contentContainer = document.getElementById('constitution-content');
+
+        // Function to display content for a given index
+        const showContent = (index) => {
+            if (index < 0 || index >= categories.length) return;
+
+            const category = categories[index];
+            contentContainer.innerHTML = `
+                <div class="flex items-start sm:items-center flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mb-6">
+                    <span class="text-5xl">${category.icon}</span>
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">${category.title}</h2>
+                        <p class="text-gray-600 mt-1 text-lg">${category.description}</p>
+                    </div>
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-200 text-gray-700 space-y-3 content-prose">
+                    ${category.details}
+                </div>
+            `;
+
+            // Update active state in nav
+            document.querySelectorAll('#constitution-nav a').forEach((link, i) => {
+                if (i === index) {
+                    link.classList.add('nav-link-active');
+                    link.classList.remove('text-gray-700', 'hover:bg-gray-100');
+                } else {
+                    link.classList.remove('nav-link-active');
+                    link.classList.add('text-gray-700', 'hover:bg-gray-100');
+                }
+            });
+        };
+
+        // Populate navigation
+        categories.forEach((category, index) => {
+            const link = document.createElement('a');
+            link.href = '#';
+            link.className = 'block p-3 rounded-lg transition-colors duration-200 text-gray-700 hover:bg-gray-100';
+            link.textContent = category.title;
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showContent(index);
+            });
+            navContainer.appendChild(link);
+        });
+
+        // Show the first category by default on page load
+        showContent(0);
+    </script>
+
+</body>
+</html>
+
+

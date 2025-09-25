@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Advocate - Nyay4U</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="text-3xl font-bold text-gray-800">Nyay4U</div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-4">Find Your Advocate</h1>
+        <p class="text-center text-gray-600 mb-12">Browse specialists from various fields of law to find the right legal expert for your needs.</p>
+        <div id="advocates-list" class="space-y-16">
+            <!-- Advocate cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 Nyay4U. All rights reserved.</p>
+            <p class="text-gray-400 mt-2">Your trusted partner in legal AI solutions.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const lawyersData = {
+                "Criminal Law": [
+                    { name: "Rakesh Gupta", specialization: "Bail & Anticipatory Bail", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RG" },
+                    { name: "Priya Singh", specialization: "Cyber Crime", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PS" },
+                    { name: "Amit Deshpande", specialization: "Narcotics Cases", location: "Pune", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AD" },
+                ],
+                "Civil Law": [
+                    { name: "Anjali Sharma", specialization: "Property Disputes", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AS" },
+                    { name: "Rajesh Kumar", specialization: "Contract Law", location: "Chennai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RK" },
+                    { name: "Sunita Reddy", specialization: "Torts and Claims", location: "Hyderabad", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=SR" },
+                ],
+                "Corporate Law": [
+                    { name: "Vikram Mehta", specialization: "Mergers & Acquisitions", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=VM" },
+                    { name: "Neha Agarwal", specialization: "Intellectual Property", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=NA" },
+                    { name: "Karan Malhotra", specialization: "Startup Law", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=KM" },
+                ],
+                "Family Law": [
+                    { name: "Meera Desai", specialization: "Divorce & Alimony", location: "Pune", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=MD" },
+                    { name: "Sanjay Verma", specialization: "Child Custody", location: "Kolkata", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=SV" },
+                    { name: "Pooja Hegde", specialization: "Adoption Law", location: "Jaipur", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PH" },
+                ],
+                "Cyber Law": [
+                    { name: "Aarav Singh", specialization: "Data Privacy", location: "Hyderabad", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AS" },
+                    { name: "Ishita Roy", specialization: "Online Fraud", location: "Bangalore", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=IR" },
+                    { name: "Nikhil Joshi", specialization: "E-commerce Disputes", location: "Noida", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=NJ" },
+                ],
+                "Tax Law": [
+                    { name: "Ravi Chandran", specialization: "GST & Indirect Tax", location: "Chennai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=RC" },
+                    { name: "Preeti Khanna", specialization: "Income Tax Disputes", location: "Mumbai", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=PK" },
+                    { name: "Anand Pillai", specialization: "International Taxation", location: "Delhi", img: "https://placehold.co/100x100/E2E8F0/4A5568?text=AP" },
+                ]
+            };
+
+            const container = document.getElementById('advocates-list');
+            if (container) {
+                let html = '';
+                for (const category in lawyersData) {
+                    html += `
+                        <div>
+                            <h2 class="text-3xl font-bold border-b-2 border-indigo-500 pb-4 mb-8 text-gray-700">${category}</h2>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    `;
+                    lawyersData[category].forEach(lawyer => {
+                        html += `
+                            <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center transform hover:-translate-y-2 transition-transform duration-300 ease-in-out hover:shadow-2xl">
+                                <img src="${lawyer.img}" alt="Profile of ${lawyer.name}" class="w-28 h-28 rounded-full mb-5 object-cover border-4 border-gray-200">
+                                <h3 class="text-xl font-bold text-gray-900">${lawyer.name}</h3>
+                                <p class="text-indigo-600 font-semibold">${lawyer.specialization}</p>
+                                <p class="text-gray-500 text-sm mt-1">${lawyer.location}</p>
+                                <button class="mt-6 bg-gray-800 text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors duration-300 w-full">View Profile</button>
+                            </div>
+                        `;
+                    });
+                    html += `</div></div>`;
+                }
+                container.innerHTML = html;
+            }
+        });
+    </script>
+
+</body>
+</html>
+

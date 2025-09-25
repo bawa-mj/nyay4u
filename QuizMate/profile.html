@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advocate Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chat-bubble-user {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-radius: 20px 20px 5px 20px;
+        }
+        .chat-bubble-advocate {
+            background-color: #e5e7eb; /* gray-200 */
+            color: #1f2937; /* gray-800 */
+            border-radius: 20px 20px 20px 5px;
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden transition-all duration-500">
+
+        <!-- Profile View -->
+        <div id="profile-view">
+            <div class="relative">
+                <img class="w-full h-40 object-cover" src="https://placehold.co/600x250/3b82f6/ffffff?text=Legal+Services" alt="Header Image">
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
+                    <img class="w-28 h-28 rounded-full border-4 border-white shadow-md" src="https://placehold.co/150x150/e0e0e0/333333?text=Advocate" alt="Advocate Profile">
+                </div>
+            </div>
+
+            <div class="pt-16 pb-8 px-6 text-center">
+                <h1 class="text-2xl font-bold text-gray-800">Advocate Jane Doe</h1>
+                <p class="text-gray-500">Corporate Law Specialist</p>
+
+                <div class="flex items-center justify-center mt-3 text-green-500">
+                    <span class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                    <span>Online</span>
+                </div>
+
+                <div class="mt-6 text-left text-gray-600">
+                    <p class="border-t border-gray-200 pt-4">
+                        <i class="fas fa-briefcase w-5 mr-2 text-blue-500"></i>
+                        12+ years of experience in corporate litigation.
+                    </p>
+                    <p class="mt-2">
+                        <i class="fas fa-graduation-cap w-5 mr-2 text-blue-500"></i>
+                        Harvard Law School, J.D.
+                    </p>
+                     <p class="mt-2">
+                        <i class="fas fa-star w-5 mr-2 text-yellow-500"></i>
+                        4.9/5.0 (250+ reviews)
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-6 bg-gray-50 border-t border-gray-200 grid grid-cols-2 gap-4">
+                <button id="start-chat-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center shadow-md">
+                    <i class="fas fa-comments mr-2"></i> Message
+                </button>
+                <button id="start-call-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl transition duration-300 flex items-center justify-center shadow-md">
+                    <i class="fas fa-phone-alt mr-2"></i> Voice Call
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chat-view" class="hidden">
+            <header class="bg-blue-500 text-white p-4 flex items-center shadow-md">
+                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://placehold.co/150x150/e0e0e0/333333?text=Advocate" alt="Advocate Profile">
+                <div class="ml-3">
+                    <h2 class="font-semibold">Advocate Jane Doe</h2>
+                    <p class="text-xs text-blue-100">Typing...</p>
+                </div>
+            </header>
+
+            <div id="chat-messages" class="h-96 p-4 overflow-y-auto bg-gray-50">
+                <!-- Chat messages will be appended here -->
+                <div class="flex justify-start mb-4">
+                    <div class="chat-bubble-advocate p-3 max-w-xs">
+                        Hello! How can I assist you with your legal matter today?
+                    </div>
+                </div>
+            </div>
+
+            <footer class="p-4 border-t border-gray-200 bg-white">
+                <form id="chat-form" class="flex items-center">
+                    <input id="chat-input" type="text" placeholder="Type your message..." class="flex-grow p-3 border border-gray-300 rounded-l-xl focus:outline-none focus:ring-2 focus:ring-blue-500" autocomplete="off">
+                    <button type="submit" class="bg-blue-500 text-white p-3 rounded-r-xl hover:bg-blue-600 transition">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+                <button id="end-chat-btn" class="w-full mt-3 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl transition duration-300">
+                    End Chat
+                </button>
+            </footer>
+        </div>
+
+        <!-- Call View -->
+        <div id="call-view" class="hidden text-center bg-gray-800 text-white p-8">
+            <div class="flex flex-col items-center justify-center h-[550px]">
+                <img class="w-32 h-32 rounded-full border-4 border-gray-600 shadow-lg animate-pulse-slow" src="https://placehold.co/150x150/e0e0e0/333333?text=Advocate" alt="Advocate Profile">
+                <h2 class="text-3xl font-bold mt-6">Advocate Jane Doe</h2>
+                <p class="text-gray-400 mt-2">Voice Call In Progress</p>
+                <div id="call-timer" class="text-2xl mt-4 font-mono bg-gray-700 px-4 py-2 rounded-lg">00:00</div>
+                <button id="end-call-btn" class="mt-12 bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-8 rounded-full transition duration-300 text-lg">
+                    <i class="fas fa-phone-slash mr-2"></i> End Call
+                </button>
+            </div>
+        </div>
+        
+        <!-- Feedback View -->
+        <div id="feedback-view" class="hidden p-8 text-center">
+             <div class="flex flex-col items-center justify-center h-[550px]">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800">Session Completed</h2>
+                <p class="text-gray-500 mt-2 mb-6">Please rate your experience with Advocate Jane Doe.</p>
+
+                <form id="feedback-form">
+                    <div class="flex justify-center items-center space-x-2 text-4xl text-gray-300 mb-6 rating-stars">
+                        <i class="far fa-star cursor-pointer" data-value="1"></i>
+                        <i class="far fa-star cursor-pointer" data-value="2"></i>
+                        <i class="far fa-star cursor-pointer" data-value="3"></i>
+                        <i class="far fa-star cursor-pointer" data-value="4"></i>
+                        <i class="far fa-star cursor-pointer" data-value="5"></i>
+                    </div>
+                    <input type="hidden" id="rating-value" name="rating" value="0">
+
+                    <textarea id="feedback-text" class="w-full p-3 border border-gray-300 rounded-xl h-28 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Share your feedback (optional)..."></textarea>
+
+                    <button type="submit" class="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-xl transition duration-300">
+                        Submit Feedback
+                    </button>
+                    <button type="button" id="skip-feedback-btn" class="w-full mt-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-4 rounded-xl transition duration-300">
+                        Skip
+                    </button>
+                </form>
+             </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // View Elements
+            const profileView = document.getElementById('profile-view');
+            const chatView = document.getElementById('chat-view');
+            const callView = document.getElementById('call-view');
+            const feedbackView = document.getElementById('feedback-view');
+
+            // Button Elements
+            const startChatBtn = document.getElementById('start-chat-btn');
+            const startCallBtn = document.getElementById('start-call-btn');
+            const endChatBtn = document.getElementById('end-chat-btn');
+            const endCallBtn = document.getElementById('end-call-btn');
+            const skipFeedbackBtn = document.getElementById('skip-feedback-btn');
+
+            // Chat Elements
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Call Elements
+            const callTimer = document.getElementById('call-timer');
+            let callInterval;
+            let callSeconds = 0;
+
+            // Feedback Elements
+            const feedbackForm = document.getElementById('feedback-form');
+            const ratingStars = document.querySelectorAll('.rating-stars i');
+            const ratingValueInput = document.getElementById('rating-value');
+            
+            // --- View Switching Logic ---
+            const showView = (view) => {
+                profileView.classList.add('hidden');
+                chatView.classList.add('hidden');
+                callView.classList.add('hidden');
+                feedbackView.classList.add('hidden');
+                view.classList.remove('hidden');
+            };
+
+            // --- Event Listeners ---
+            startChatBtn.addEventListener('click', () => {
+                showView(chatView);
+            });
+
+            startCallBtn.addEventListener('click', () => {
+                showView(callView);
+                startCallTimer();
+            });
+
+            endChatBtn.addEventListener('click', () => {
+                showView(feedbackView);
+            });
+
+            endCallBtn.addEventListener('click', () => {
+                stopCallTimer();
+                showView(feedbackView);
+            });
+
+            skipFeedbackBtn.addEventListener('click', () => {
+                showView(profileView);
+                resetFeedbackForm();
+            });
+
+            // --- Chat Logic ---
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const message = chatInput.value.trim();
+                if (message) {
+                    addMessage(message, 'user');
+                    chatInput.value = '';
+                    // Simulate advocate reply
+                    setTimeout(() => {
+                        addMessage('Thank you for your message. I am reviewing it now.', 'advocate');
+                    }, 1000);
+                }
+            });
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                const bubbleDiv = document.createElement('div');
+                
+                messageDiv.className = `flex mb-4 ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+                bubbleDiv.className = `p-3 max-w-xs ${sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-advocate'}`;
+                bubbleDiv.textContent = text;
+                
+                messageDiv.appendChild(bubbleDiv);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // --- Call Timer Logic ---
+            function startCallTimer() {
+                callSeconds = 0;
+                callInterval = setInterval(() => {
+                    callSeconds++;
+                    const minutes = String(Math.floor(callSeconds / 60)).padStart(2, '0');
+                    const seconds = String(callSeconds % 60).padStart(2, '0');
+                    callTimer.textContent = `${minutes}:${seconds}`;
+                }, 1000);
+            }
+
+            function stopCallTimer() {
+                clearInterval(callInterval);
+            }
+
+            // --- Feedback Logic ---
+            ratingStars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const rating = star.dataset.value;
+                    ratingValueInput.value = rating;
+                    updateStarRating(rating);
+                });
+            });
+
+            function updateStarRating(rating) {
+                ratingStars.forEach(star => {
+                    if (star.dataset.value <= rating) {
+                        star.classList.remove('far');
+                        star.classList.add('fas', 'text-yellow-500');
+                    } else {
+                        star.classList.remove('fas', 'text-yellow-500');
+                        star.classList.add('far');
+                    }
+                });
+            }
+
+            feedbackForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const rating = ratingValueInput.value;
+                const feedbackText = document.getElementById('feedback-text').value;
+
+                console.log('Feedback Submitted:', { rating, feedbackText });
+                
+                // Reset to profile view
+                showView(profileView);
+                resetFeedbackForm();
+                // Optionally show a "thank you" message
+            });
+            
+            function resetFeedbackForm() {
+                ratingValueInput.value = '0';
+                updateStarRating(0);
+                document.getElementById('feedback-text').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Tracking System - eCourts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .loader {
+            border-top-color: #3498db;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
+        }
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 flex flex-col items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 m-4">
+        <div class="text-center mb-8">
+            <div class="flex justify-center items-center gap-3">
+                <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                </svg>
+                <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Case Tracking System</h1>
+            </div>
+            <p class="text-gray-500 dark:text-gray-300 mt-2">Enter your CNR number to get case information.</p>
+        </div>
+
+        <!-- CNR Input Form -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <input type="text" id="cnrInput" placeholder="e.g., HRPK010012342024 or UPGB010098762022" class="flex-grow w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 dark:text-gray-200">
+            <button id="trackBtn" class="w-full sm:w-auto bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300">
+                Search Case
+            </button>
+        </div>
+
+        <!-- Loader and Messages -->
+        <div id="loader" class="hidden text-center my-6">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto"></div>
+            <p class="mt-4 text-gray-600 dark:text-gray-400">Loading information...</p>
+        </div>
+        <div id="errorMessage" class="hidden text-center my-6 p-4 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-lg"></div>
+
+        <!-- Case Details Display -->
+        <div id="caseDetails" class="hidden mt-8 space-y-8">
+            
+            <!-- Basic Info -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Basic Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4">
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">CNR Number</span><span id="cnrNumber" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Case Type</span><span id="caseType" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Filing Date</span><span id="filingDate" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col md:col-span-2 lg:col-span-3"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Court Name</span><span id="courtName" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Judge</span><span id="judgeName" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Case Status</span><span id="caseStatus" class="text-lg font-semibold"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Next Hearing</span><span id="nextDate" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                </div>
+            </div>
+
+            <!-- Party Info -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Party Details</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Petitioner</span><span id="petitioner" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Petitioner's Advocate</span><span id="petitionerAdvocate" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Respondent</span><span id="respondent" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                    <div class="flex flex-col"><span class="text-sm font-medium text-gray-500 dark:text-gray-400">Respondent's Advocate</span><span id="respondentAdvocate" class="text-lg font-semibold text-gray-900 dark:text-white"></span></div>
+                </div>
+            </div>
+
+            <!-- History and Orders -->
+            <div class="bg-gray-50 dark:bg-gray-700/50 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Case History and Orders</h3>
+                <div id="orders" class="space-y-4 max-h-64 overflow-y-auto pr-2">
+                    <!-- Orders will be dynamically inserted here -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <footer class="text-center p-4">
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+            Disclaimer: This is a demo application. The information shown here is for demonstration purposes only and is not related to the official eCourts website.
+        </p>
+    </footer>
+
+    <script>
+        const trackBtn = document.getElementById('trackBtn');
+        const cnrInput = document.getElementById('cnrInput');
+        const loader = document.getElementById('loader');
+        const errorMessage = document.getElementById('errorMessage');
+        const caseDetails = document.getElementById('caseDetails');
+
+        // --- Mock Data (for API simulation) ---
+        const mockCaseData = {
+            "HRPK010012342024": {
+                cnr: "HRPK010012342024",
+                caseType: "Civil Appeal",
+                filingDate: "05 August 2024",
+                status: "Pending",
+                court: "District and Sessions Judge, Panchkula",
+                judge: "Hon'ble Sh. A. K. Singh",
+                nextHearing: "15 October 2025",
+                petitioner: "Ramesh Kumar",
+                advocatePetitioner: "Sh. Vikas Gupta",
+                respondent: "State of Haryana",
+                advocateRespondent: "Government Pleader",
+                orders: [
+                    { date: "10 August 2024", details: "Case registered. Notice issued to the respondent." },
+                    { date: "25 August 2024", details: "Reply filed on behalf of the respondent." },
+                    { date: "10 September 2025", details: "Arguments heard. Next date fixed." }
+                ]
+            },
+            "DLCT010056782023": {
+                cnr: "DLCT010056782023",
+                caseType: "Criminal Writ Petition",
+                filingDate: "01 June 2023",
+                status: "Disposed",
+                court: "Central District, Tis Hazari Court, Delhi",
+                judge: "Hon'ble Ms. R. Sharma",
+                nextHearing: "Not Applicable",
+                petitioner: "Sunita Devi",
+                advocatePetitioner: "Smt. Priya Mehra",
+                respondent: "Municipal Corporation of Delhi",
+                advocateRespondent: "Sh. Anil Kumar",
+                orders: [
+                    { date: "05 June 2023", details: "Case registered." },
+                    { date: "20 June 2023", details: "Evidence presented." },
+                    { date: "18 July 2023", details: "Final arguments concluded." },
+                    { date: "02 August 2023", details: "Final judgment pronounced. Case disposed." }
+                ]
+            },
+            "UPGB010098762022": {
+                cnr: "UPGB010098762022",
+                caseType: "Motor Accident Claim",
+                filingDate: "22 March 2022",
+                status: "Pending",
+                court: "Motor Accident Claims Tribunal, Gautam Budh Nagar",
+                judge: "Hon'ble Sh. S. P. Tyagi",
+                nextHearing: "30 September 2025",
+                petitioner: "Ajay Singh",
+                advocatePetitioner: "Sh. Rajesh Chaudhary",
+                respondent: "National Insurance Company Ltd.",
+                advocateRespondent: "Sh. Saurabh Khanna",
+                orders: [
+                    { date: "22 March 2022", details: "Claim petition filed." },
+                    { date: "15 April 2022", details: "Written statement filed by the respondent insurance company." },
+                    { date: "10 May 2025", details: "Evidence of the petitioner's side recorded." },
+                    { date: "28 August 2025", details: "Case listed for final arguments." }
+                ]
+            }
+        };
+
+        // --- Event Listener ---
+        trackBtn.addEventListener('click', findCase);
+        cnrInput.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                findCase();
+            }
+        });
+
+        function findCase() {
+            const cnrValue = cnrInput.value.trim().toUpperCase();
+            caseDetails.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            if (!cnrValue) {
+                showError("Please enter a valid CNR number.");
+                return;
+            }
+
+            loader.classList.remove('hidden');
+
+            setTimeout(() => {
+                const data = mockCaseData[cnrValue];
+                loader.classList.add('hidden');
+
+                if (data) {
+                    displayCaseData(data);
+                } else {
+                    showError(`No record found for CNR Number "${cnrValue}". Please check again.`);
+                }
+            }, 1500);
+        }
+
+        function displayCaseData(data) {
+            // Basic Info
+            document.getElementById('cnrNumber').textContent = data.cnr;
+            document.getElementById('caseType').textContent = data.caseType;
+            document.getElementById('filingDate').textContent = data.filingDate;
+            document.getElementById('courtName').textContent = data.court;
+            document.getElementById('judgeName').textContent = data.judge;
+            document.getElementById('nextDate').textContent = data.nextHearing;
+            
+            const statusElement = document.getElementById('caseStatus');
+            statusElement.textContent = data.status;
+            statusElement.className = 'text-lg font-semibold'; // Reset classes
+            if (data.status.toLowerCase().includes('disposed')) {
+                statusElement.classList.add('text-red-600', 'dark:text-red-400');
+            } else {
+                statusElement.classList.add('text-green-600', 'dark:text-green-400');
+            }
+            
+            // Party Info
+            document.getElementById('petitioner').textContent = data.petitioner;
+            document.getElementById('petitionerAdvocate').textContent = data.advocatePetitioner;
+            document.getElementById('respondent').textContent = data.respondent;
+            document.getElementById('respondentAdvocate').textContent = data.advocateRespondent;
+
+            // Orders
+            const ordersContainer = document.getElementById('orders');
+            ordersContainer.innerHTML = '';
+            if (data.orders && data.orders.length > 0) {
+                 data.orders.forEach(order => {
+                    const orderElement = document.createElement('div');
+                    orderElement.className = 'flex items-start justify-between p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600';
+                    orderElement.innerHTML = `
+                        <div>
+                            <p class="font-semibold text-gray-800 dark:text-gray-200">${order.date}</p>
+                            <p class="text-gray-600 dark:text-gray-300 mt-1">${order.details}</p>
+                        </div>
+                        <a href="#" onclick="event.preventDefault(); alert('This is a demo. Download functionality is not available.')" class="ml-4 text-blue-500 hover:text-blue-700" title="Download">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                        </a>
+                    `;
+                    ordersContainer.appendChild(orderElement);
+                });
+            } else {
+                 ordersContainer.innerHTML = `<p class="text-gray-500 dark:text-gray-400">No orders are available.</p>`;
+            }
+           
+            caseDetails.classList.remove('hidden');
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+
